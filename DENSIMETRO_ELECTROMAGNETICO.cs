@@ -63,10 +63,93 @@ namespace ERP_COMPLETO
             label20.MouseLeave += new System.EventHandler(labelTelefono_MouseLeave);
             label33.MouseLeave += new System.EventHandler(labelTelefono_MouseLeave);
             label34.MouseLeave += new System.EventHandler(labelTelefono_MouseLeave);
-
         }
 
 
+
+        private void consulta_densimetro()
+        {
+            MySqlCommand query = new MySqlCommand();
+            query.CommandText = "SELECT * FROM densimetro_referencias WHERE ID_SEGUIMIENTO = '" + didi + "' ";  //QUERY DE CONSULTA
+            MySqlDataReader consulta;
+            query.Connection = CONEXION_REMOTO_PND.USR;
+            query.Connection.Open();
+            consulta = query.ExecuteReader();
+
+            while (consulta.Read())
+            {
+                ID.Texts = (consulta["ID_SEGUIMIENTO"].ToString());
+                FECHA_ENSAYE.Text = (consulta["FECHA_ENSAYE"].ToString());
+                CLAVE_OBRA.Texts = (consulta["CLAVE_OBRA"].ToString());
+                NO_INFORME.Texts = (consulta["NO_INFORME"].ToString());
+                OBRA.Texts = (consulta["OBRA"].ToString());
+                CLIENTE.Texts = (consulta["CLIENTE"].ToString());
+                ATENCION.Texts = (consulta["ATENCION"].ToString());
+                if (FECHA_INFORME.Text == "0001-01-01")
+                {
+                    FECHA_INFORME.Text = DateTime.Today.ToString("yyyy-MM-dd");
+                }
+                MATERIAL.Texts = (consulta["MATERIAL"].ToString());
+                COMPACTACION_PROYECTO.Texts = (consulta["COMPACTACION_PROYECTO"].ToString());
+                PROCEDENCIA.Texts = (consulta["PROCEDENCIA"].ToString());
+                HUMEDAD_OPTIMA.Texts = (consulta["HUMEDAD_OPTIMA"].ToString());
+                USO_MATERIAL.Texts = (consulta["USO_MATERIAL"].ToString());
+                UBICACION.Texts = (consulta["UBICACION"].ToString());
+                MEDIDOR.Texts = (consulta["MEDIDOR"].ToString());
+                MARCA.Texts = (consulta["MARCA"].ToString());
+                MODELO.Texts = (consulta["MODELO"].ToString());
+                NO_SERIE.Texts = (consulta["NO_SERIE"].ToString());
+                USUARIO.Texts = (consulta["USUARIO"].ToString());
+                if (FECHA_REGISTRO.Text == "0001-01-01")
+                {
+                    FECHA_REGISTRO.Text = DateTime.Today.ToString("yyyy-MM-dd");
+                }
+                OBSERVACIONES.Texts = (consulta["OBSERVACIONES"].ToString());
+                TEMPERATURA.Texts = (consulta["TEMPERATURA"].ToString());
+                HUMEDAD_RELATIVA.Texts = (consulta["HUMEDAD_RELATIVA"].ToString());
+                clave_mues = (consulta["CLAVE_MUESTRA"].ToString());
+                REVISO.Texts = (consulta["REVISO"].ToString());
+                REALIZO.Texts = (consulta["REALIZO"].ToString());
+                TIPO_CAPA.Texts = (consulta["TIPO_CAPA"].ToString());
+                TIPO_ENSAYE.Texts = (consulta["TIPO_ENSAYE"].ToString());
+                NO_CALIDAD.Texts = (consulta["NO_CALIDAD"].ToString());
+                MVSM.Texts = (consulta["MVSM"].ToString());
+            }
+
+            query.Connection.Close();
+
+
+            DGV_PADRON.DataSource = CONEXION_REMOTO_PND.CONSULTA_GENERAL("SELECT ID_SEGUIMIENTO, NUMERO_SONDEO , LOCALIZACION_SONDEO, NUMERO_CAPA, ESPESOR_CAPA_CM, NUMERO_TARA, MASA_TARA, MASA_TARA_MAT_HUM, MASA_MAT_HUM, MASA_TARA_MAT_SECO, MASA_MAT_SECO, 	CONTEN_AGUA, MASA_VOL_MAT_HUMEDO, MASA_VOL_SEC_LUG, MASA_VOL_SEC_MAX_MAT, COMPACTACION       FROM sondeos_densimetro WHERE CLAVE_MUESTRA = '" + clave_mues + "'  ");
+
+            DGV_PADRON.Columns[0].HeaderText = "Id";
+            DGV_PADRON.Columns[1].HeaderText = "No.";
+            DGV_PADRON.Columns[2].HeaderText = "Localización";
+            DGV_PADRON.Columns[3].HeaderText = "No. de capa";
+            DGV_PADRON.Columns[4].HeaderText = "Espesor de capa (cm)";
+            DGV_PADRON.Columns[5].HeaderText = "No. de tara";
+            DGV_PADRON.Columns[6].HeaderText = "Masa de tara";
+            DGV_PADRON.Columns[7].HeaderText = "Masa de tara + Mat. Hum";
+            DGV_PADRON.Columns[8].HeaderText = "Masa de mat. Hum";
+            DGV_PADRON.Columns[9].HeaderText = "Masa de tara + Mat. Seco";
+            DGV_PADRON.Columns[10].HeaderText = "Masa de Mat. Seco";
+            DGV_PADRON.Columns[11].HeaderText = "Contenido de agua";
+            DGV_PADRON.Columns[12].HeaderText = "Masa Vol de Mat. Hum";
+            DGV_PADRON.Columns[13].HeaderText = "Masa Vol. Seca del lugar";
+            DGV_PADRON.Columns[14].HeaderText = "MVSM del material";
+            DGV_PADRON.Columns[15].HeaderText = "Compactación (%)";
+
+            DGV_PADRON.Columns[0].Width = 80;
+            DGV_PADRON.Columns[1].Width = 80;
+            DGV_PADRON.Columns[2].Width = 150;
+            DGV_PADRON.Columns[3].Width = 80;
+
+            //if(DGV_PADRON.Rows.Count != 0 ||  DGV_PADRON.Rows[0].Cells["MVSM"].Value.ToString() != "" || DGV_PADRON.Rows[0].Cells["MVSM"].Value != null)
+            //{
+            // MVSM.Texts = DGV_PADRON.Rows[0].Cells["MASA_VOL_SEC_MAX_MAT"].Value.ToString();
+            //}
+
+
+        }
 
 
 
@@ -312,10 +395,6 @@ namespace ERP_COMPLETO
             FORMULA_4(e.RowIndex);
             FORMULA_5(e.RowIndex);
 
-
-
-
-
             actualiza_sondeos();
             try
             {
@@ -334,10 +413,154 @@ namespace ERP_COMPLETO
 
 
 
+        private void INFO_GRAL()
+        {
+            MySqlConnection CONEXION = CONEXION_REMOTO_PND.USR;
+            CONEXION.Open();
+
+            string checkQuery = "SELECT COUNT(*) FROM densimetro_referencias WHERE CLAVE_OBRA = @clave AND NO_INFORME = @n_inf";
+            MySqlCommand checkCommand = new MySqlCommand(checkQuery, CONEXION);
+            checkCommand.Parameters.AddWithValue("@clave", CLAVE_OBRA.Texts);
+            checkCommand.Parameters.AddWithValue("@n_inf", NO_INFORME.Texts);
+            int exists = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+            string clave_muestra = CLAVE_OBRA.Texts.ToUpper() + "-" + NO_INFORME.Texts.ToUpper();
+
+            if (exists == 0) // Si el registro no existe INSERTA
+            {
+                string insertQuery = "INSERT INTO densimetro_referencias(FECHA_ENSAYE, CLAVE_OBRA, NO_INFORME, OBRA, CLIENTE, ATENCION, FECHA_INFORME, " +
+                    "MATERIAL, COMPACTACION_PROYECTO,PROCEDENCIA,HUMEDAD_OPTIMA,USO_MATERIAL,UBICACION,MEDIDOR,MARCA,MODELO,NO_SERIE,USUARIO,FECHA_REGISTRO," +
+                    "OBSERVACIONES,TEMPERATURA,HUMEDAD_RELATIVA,ESTANDAR_REFERENCIA,CLAVE_MUESTRA,REVISO,REALIZO,TIPO_CAPA,TIPO_ENSAYE,NO_CALIDAD,MVSM)" +
+                "VALUES('" + FECHA_ENSAYE.Text + "','" + CLAVE_OBRA.Texts.ToUpper() + "','" + NO_INFORME.Texts.ToUpper() + "','" + OBRA.Texts.ToUpper() + "'," +
+                "'" + CLIENTE.Texts.ToUpper() + "','" + ATENCION.Texts.ToUpper() + "','" + FECHA_INFORME.Text + "','" + MATERIAL.Texts.ToUpper() + "'," +
+                "'" + COMPACTACION_PROYECTO.Texts.ToUpper() + "','" + PROCEDENCIA.Texts.ToUpper() + "','" + HUMEDAD_OPTIMA.Texts.ToUpper() + "'," +
+                "'" + USO_MATERIAL.Texts.ToUpper() + "','" + UBICACION.Texts.ToUpper() + "','" + MEDIDOR.Texts.ToUpper() + "','" + MARCA.Texts.ToUpper() + "'," +
+                "'" + MODELO.Texts.ToUpper() + "','" + NO_SERIE.Texts.ToUpper() + "','" + SESION.usuario + "','" + FECHA_REGISTRO.Text+ "'," +
+                "'" + OBSERVACIONES.Texts.ToUpper() + "','" + TEMPERATURA.Texts.ToUpper() + "','" + HUMEDAD_RELATIVA.Texts.ToUpper() + "','ASTM D7830/D7830M - 13','" + clave_muestra+"'," +
+                "'"+REVISO.Texts.ToUpper()+"','"+REALIZO.Texts.ToUpper()+"','"+TIPO_CAPA.Texts.ToUpper()+"','"+TIPO_ENSAYE.Texts.ToUpper()+"','"+NO_CALIDAD.Texts.ToUpper()+"'," +
+                "'"+MVSM.Texts.ToUpper()+"' ) ";
+
+                MySqlCommand insertCommand = new MySqlCommand(insertQuery, CONEXION);
+                insertCommand.ExecuteNonQuery();
+
+                MENSAJE_GENERAL MN = new MENSAJE_GENERAL();
+                MN.BOTON.Text = "INFORMACIÓN REGISTRADA";
+                MN.ShowDialog();
+            }
+            else // Si el registro ya existe ACTUALIZA  
+            {
+                string updateQuery = "UPDATE densimetro_referencias SET FECHA_ENSAYE = '" + FECHA_ENSAYE.Text + "', ATENCION = '" + ATENCION.Texts.ToUpper() + "', FECHA_INFORME = '" + FECHA_INFORME.Text + "', " +
+               "MATERIAL = '" + MATERIAL.Texts.ToUpper() + "', COMPACTACION_PROYECTO = '" + COMPACTACION_PROYECTO.Texts.ToUpper() + "',PROCEDENCIA='" + PROCEDENCIA.Texts.ToUpper() + "'," +
+               "HUMEDAD_OPTIMA = '" + HUMEDAD_OPTIMA.Texts.ToUpper() + "', USO_MATERIAL = '" + USO_MATERIAL.Texts.ToUpper() + "',UBICACION = '" + UBICACION.Texts.ToUpper() + "'," +
+               "MEDIDOR = '" + MEDIDOR.Texts.ToUpper() + "',MARCA = '" + MARCA.Texts.ToUpper() + "', MODELO = '" + MODELO.Texts.ToUpper() + "',NO_SERIE = '" + NO_SERIE.Texts.ToUpper() + "'," +
+               "USUARIO = '" + SESION.usuario + "', FECHA_REGISTRO = '" + FECHA_REGISTRO.Text + "',OBSERVACIONES = '" + OBSERVACIONES.Texts.ToUpper() + "',TEMPERATURA = '" + TEMPERATURA.Texts.ToUpper() + "'," +
+               "HUMEDAD_RELATIVA = '" + HUMEDAD_RELATIVA.Texts.ToUpper() + "',REVISO = '" + REVISO.Texts + "',REALIZO = '" + REALIZO.Texts + "'," +
+               "TIPO_CAPA='" + TIPO_CAPA.Texts.ToUpper() + "',TIPO_ENSAYE='" + TIPO_ENSAYE.Texts.ToUpper() + "',NO_CALIDAD='" + NO_CALIDAD.Texts.ToUpper() + "'," +
+               "MVSM = '" + MVSM.Texts.ToUpper() + "' " +
+               "WHERE CLAVE_OBRA  = '" + CLAVE_OBRA.Texts.ToUpper() + "' AND NO_INFORME = '" + NO_INFORME.Texts.ToUpper() + "' AND CLAVE_MUESTRA = '" + clave_muestra + "'    ";
+
+                MySqlCommand updateCommand = new MySqlCommand(updateQuery, CONEXION);
+                updateCommand.ExecuteNonQuery();
+
+                MENSAJE_GENERAL MN = new MENSAJE_GENERAL();
+                MN.BOTON.Text = "INFORMACIÓN ACTUALIZADA";
+                MN.ShowDialog();
+            }
+
+            CONEXION.Close();
+        }
+
+
+        private void INFO_DGV()
+        {
+            MySqlConnection CONEXION = CONEXION_REMOTO_PND.USR;
+            CONEXION.Open();
+
+            string clave_muestra = CLAVE_OBRA.Texts.ToUpper() + "-" + NO_INFORME.Texts.ToUpper();
+
+            string checkQuery = "SELECT COUNT(*) FROM sondeos_densimetro WHERE CLAVE_OBRA = @clave AND NO_INFORME = @n_inf AND CLAVE_MUESTRA = @clave_muestra";
+            MySqlCommand checkCommand = new MySqlCommand(checkQuery, CONEXION);
+            checkCommand.Parameters.AddWithValue("@clave", CLAVE_OBRA.Texts);
+            checkCommand.Parameters.AddWithValue("@n_inf", NO_INFORME.Texts);
+            checkCommand.Parameters.AddWithValue("@clave_muestra", clave_muestra);
+            int exists = Convert.ToInt32(checkCommand.ExecuteScalar());
+
+            if (exists == 0) // Si el registro no existe, INSERTA
+            {
+                string insertQuery = "INSERT INTO sondeos_densimetro(CLAVE_OBRA,NO_INFORME,NUMERO_SONDEO,LOCALIZACION_SONDEO,NUMERO_CAPA,ESPESOR_CAPA_CM,NUMERO_TARA,MASA_TARA," +
+                    "MASA_TARA_MAT_HUM,MASA_MAT_HUM,MASA_TARA_MAT_SECO,MASA_MAT_SECO,CONTEN_AGUA,MASA_VOL_MAT_HUMEDO,MASA_VOL_SEC_LUG,MASA_VOL_SEC_MAX_MAT,COMPACTACION,USUARIO,CLAVE_MUESTRA)" +
+                    " VALUES ('" + CLAVE_OBRA.Texts.ToUpper() + "','" + NO_INFORME.Texts.ToUpper() + "',?N_SONDEO,?LOC_SOND,?N_CAPA,?ESP_CAPA_CM,?N_TARA,?MA_TARA,?MA_TA_MA_HUM,?MA_MAT_HU," +
+                    "?MA_TA_MA_SE,?MA_MA_SEC,?CON_AGU,?MA_VOL_MA_HU,?MA_VOL_SE_LU,?MA_VO_SE_MAX_MAT,?POR_COMP,'"+SESION.usuario+"','" + clave_muestra + "')  ";
+
+                MySqlCommand insertCommand = new MySqlCommand(insertQuery, CONEXION);
+                foreach (DataGridViewRow row in DGV_PADRON.Rows)
+                {
+                    insertCommand.Parameters.Clear();
+                    insertCommand.Parameters.AddWithValue("?N_SONDEO", Convert.ToString(row.Cells[1].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?LOC_SOND", Convert.ToString(row.Cells[2].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?N_CAPA", Convert.ToString(row.Cells[3].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?ESP_CAPA_CM", Convert.ToString(row.Cells[4].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?N_TARA", Convert.ToString(row.Cells[5].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_TARA", Convert.ToString(row.Cells[6].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_TA_MA_HUM", Convert.ToString(row.Cells[7].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_MAT_HU", Convert.ToString(row.Cells[8].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_TA_MA_SE", Convert.ToString(row.Cells[9].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_MA_SEC", Convert.ToString(row.Cells[10].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?CON_AGU", Convert.ToString(row.Cells[11].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_VOL_MA_HU", Convert.ToString(row.Cells[12].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_VOL_SE_LU", Convert.ToString(row.Cells[13].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?MA_VO_SE_MAX_MAT", Convert.ToString(row.Cells[14].Value).ToUpper());
+                    insertCommand.Parameters.AddWithValue("?POR_COMP", Convert.ToString(row.Cells[15].Value).ToUpper());
+                    insertCommand.ExecuteNonQuery();
+                }
+
+            }
+            else // Si el registro ya existe, ACTUALIZA
+            {
+                foreach (DataGridViewRow row in DGV_PADRON.Rows)
+                {
+                    string updateQuery = "UPDATE sondeos_densimetro SET NUMERO_SONDEO = ?N_SOND, LOCALIZACION_SONDEO = ?LOC_SOND, NUMERO_CAPA=?N_CAPA," +
+                        " ESPESOR_CAPA_CM=?ESP_CAPA_CM,NUMERO_TARA=?N_TARA, MASA_TARA=?M_TARA, MASA_TARA_MAT_HUM=?M_TARA_M_HUM," +
+                        "MASA_MAT_HUM=?M_MAT_HUM, MASA_TARA_MAT_SECO=?M_TARA_M_SECO, MASA_MAT_SECO=?MASA_MAT_SECO,CONTEN_AGUA=?CONT_AGUA," +
+                        "MASA_VOL_MAT_HUMEDO=?MASA_V_MAT_HUM,MASA_VOL_SEC_LUG=?MAS_V_SEC_LUG,MASA_VOL_SEC_MAX_MAT=?MVSM,COMPACTACION=?COMPACT,USUARIO=?USU WHERE ID_SEGUIMIENTO= ?ID AND CLAVE_OBRA = ?CLAVE AND NO_INFORME = ?N_INF AND CLAVE_MUESTRA = ?CLAV_MUES    ";
+
+                    MySqlCommand updateCommand = new MySqlCommand(updateQuery, CONEXION);
+                    updateCommand.Parameters.AddWithValue("?ID", Convert.ToString(row.Cells[0].Value)); // clave para la fila
+                    updateCommand.Parameters.AddWithValue("?N_SOND", Convert.ToString(row.Cells[1].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?LOC_SOND", Convert.ToString(row.Cells[2].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?N_CAPA", Convert.ToString(row.Cells[3].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?ESP_CAPA_CM", Convert.ToString(row.Cells[4].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?N_TARA", Convert.ToString(row.Cells[5].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?M_TARA", Convert.ToString(row.Cells[6].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?M_TARA_M_HUM", Convert.ToString(row.Cells[7].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?M_MAT_HUM", Convert.ToString(row.Cells[8].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?M_TARA_M_SECO", Convert.ToString(row.Cells[9].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?MASA_MAT_SECO", Convert.ToString(row.Cells[10].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?CONT_AGUA", Convert.ToString(row.Cells[11].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?MASA_V_MAT_HUM", Convert.ToString(row.Cells[12].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?MAS_V_SEC_LUG", Convert.ToString(row.Cells[13].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?MVSM", Convert.ToString(row.Cells[14].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?COMPACT", Convert.ToString(row.Cells[15].Value).ToUpper());
+                    updateCommand.Parameters.AddWithValue("?USU", SESION.usuario);
+                    updateCommand.Parameters.AddWithValue("?CLAVE", CLAVE_OBRA.Texts.ToUpper());
+                    updateCommand.Parameters.AddWithValue("?N_INF", NO_INFORME.Texts.ToUpper());
+                    updateCommand.Parameters.AddWithValue("?CLAV_MUES", clave_muestra);
+                    updateCommand.ExecuteNonQuery();
+                }
+
+            }
+
+            CONEXION.Close();
+        }
 
 
 
 
+        private void altoButton1_Click(object sender, EventArgs e)
+        {
+            INFO_GRAL();
+            INFO_DGV();
+        }
 
 
 
@@ -371,88 +594,7 @@ namespace ERP_COMPLETO
         }
 
 
-        private void consulta_densimetro()
-        {
-            MySqlCommand query = new MySqlCommand();
-            query.CommandText = "SELECT * FROM densimetro_referencias WHERE ID_SEGUIMIENTO = '" + didi + "' ";  //QUERY DE CONSULTA
-            MySqlDataReader consulta;
-            query.Connection = CONEXION_REMOTO_PND.USR;
-            query.Connection.Open();
-            consulta = query.ExecuteReader();
-
-            while (consulta.Read())
-            {
-                FECHA_ENSAYE.Text = (consulta["FECHA_ENSAYE"].ToString());
-                CLAVE_OBRA.Texts = (consulta["CLAVE_OBRA"].ToString());
-                NO_INFORME.Texts = (consulta["NO_INFORME"].ToString());
-                OBRA.Texts = (consulta["OBRA"].ToString());
-                CLIENTE.Texts = (consulta["CLIENTE"].ToString());
-                ATENCION.Texts = (consulta["ATENCION"].ToString());
-                if (FECHA_INFORME.Text == "0001-01-01")
-                {
-                    FECHA_INFORME.Text = DateTime.Today.ToString("yyyy-MM-dd");
-                }         
-                MATERIAL.Texts = (consulta["MATERIAL"].ToString());
-                COMPACTACION_PROYECTO.Texts = (consulta["COMPACTACION_PROYECTO"].ToString());
-                PROCEDENCIA.Texts = (consulta["PROCEDENCIA"].ToString());
-                HUMEDAD_OPTIMA.Texts = (consulta["HUMEDAD_OPTIMA"].ToString());
-                USO_MATERIAL.Texts = (consulta["USO_MATERIAL"].ToString());
-                UBICACION.Texts = (consulta["UBICACION"].ToString());
-                MEDIDOR.Texts = (consulta["MEDIDOR"].ToString());
-                MARCA.Texts = (consulta["MARCA"].ToString());
-                MODELO.Texts = (consulta["MODELO"].ToString());
-                NO_SERIE.Texts = (consulta["NO_SERIE"].ToString());
-                USUARIO.Texts = (consulta["USUARIO"].ToString());
-                if (FECHA_REGISTRO.Text == "0001-01-01")
-                {
-                    FECHA_REGISTRO.Text = DateTime.Today.ToString("yyyy-MM-dd");
-                }          
-                OBSERVACIONES.Texts = (consulta["OBSERVACIONES"].ToString());
-                TEMPERATURA.Texts = (consulta["TEMPERATURA"].ToString());
-                HUMEDAD_RELATIVA.Texts = (consulta["HUMEDAD_RELATIVA"].ToString());
-                clave_mues = (consulta["CLAVE_MUESTRA"].ToString());
-                REVISO.Texts = (consulta["REVISO"].ToString());
-                REALIZO.Texts = (consulta["REALIZO"].ToString());
-                TIPO_CAPA.Texts = (consulta["TIPO_CAPA"].ToString());
-                TIPO_ENSAYE.Texts = (consulta["TIPO_ENSAYE"].ToString());
-                NO_CALIDAD.Texts = (consulta["NO_CALIDAD"].ToString());
-                MVSM.Texts = (consulta["MVSM"].ToString());
-            }
-
-            query.Connection.Close();
-
-
-            DGV_PADRON.DataSource = CONEXION_REMOTO_PND.CONSULTA_GENERAL("SELECT ID_SEGUIMIENTO, NUMERO_SONDEO , LOCALIZACION_SONDEO, NUMERO_CAPA, ESPESOR_CAPA_CM, NUMERO_TARA, MASA_TARA, MASA_TARA_MAT_HUM, MASA_MAT_HUM, MASA_TARA_MAT_SECO, MASA_MAT_SECO, 	CONTEN_AGUA, MASA_VOL_MAT_HUMEDO, MASA_VOL_SEC_LUG, MASA_VOL_SEC_MAX_MAT, COMPACTACION       FROM sondeos_densimetro WHERE CLAVE_MUESTRA = '" + clave_mues  +"'  ");
-
-            DGV_PADRON.Columns[0].HeaderText = "Id";
-            DGV_PADRON.Columns[1].HeaderText = "No.";
-            DGV_PADRON.Columns[2].HeaderText = "Localización";
-            DGV_PADRON.Columns[3].HeaderText = "No. de capa";
-            DGV_PADRON.Columns[4].HeaderText = "Espesor de capa (cm)";
-            DGV_PADRON.Columns[5].HeaderText = "No. de tara";
-            DGV_PADRON.Columns[6].HeaderText = "Masa de tara";
-            DGV_PADRON.Columns[7].HeaderText = "Masa de tara + Mat. Hum";
-            DGV_PADRON.Columns[8].HeaderText = "Masa de mat. Hum";
-            DGV_PADRON.Columns[9].HeaderText = "Masa de tara + Mat. Seco";
-            DGV_PADRON.Columns[10].HeaderText = "Masa de Mat. Seco";
-            DGV_PADRON.Columns[11].HeaderText = "Contenido de agua";
-            DGV_PADRON.Columns[12].HeaderText = "Masa Vol de Mat. Hum";
-            DGV_PADRON.Columns[13].HeaderText = "Masa Vol. Seca del lugar";
-            DGV_PADRON.Columns[14].HeaderText = "MVSM del material";
-            DGV_PADRON.Columns[15].HeaderText = "Compactación (%)";
-
-            DGV_PADRON.Columns[0].Width = 80;
-            DGV_PADRON.Columns[1].Width = 80;
-            DGV_PADRON.Columns[2].Width = 150;
-            DGV_PADRON.Columns[3].Width = 80;
-
-            if(DGV_PADRON.Rows.Count != 0 ||  DGV_PADRON.Rows[0].Cells["MASA_VOL_SEC_MAX_MAT"].Value.ToString() != "" || DGV_PADRON.Rows[0].Cells["MASA_VOL_SEC_MAX_MAT"].Value != null)
-            {
-                MVSM.Texts = DGV_PADRON.Rows[0].Cells["MASA_VOL_SEC_MAX_MAT"].Value.ToString();
-            }
-
-
-        }
+     
         private void labelTelefono_MouseLeave(object sender, EventArgs e)
         {
             var button = sender as Label;
@@ -3550,8 +3692,8 @@ namespace ERP_COMPLETO
                 {
                     BaseColor negro = new BaseColor(10, 10, 10);
                     BaseColor blanco = new BaseColor(255, 255, 255);
-                    BaseColor gris_oscuro = new BaseColor(191, 191, 191);
-                    BaseColor gris_claro = new BaseColor(217, 217, 217);
+                    BaseColor azul_claro = new BaseColor(197, 217, 241);
+                    BaseColor azul_oscuro = new BaseColor(83, 141, 213);
                     BaseColor gris_oscuro_border = new BaseColor(176, 176, 176);
 
                     iTextSharp.text.Font title = FontFactory.GetFont("Arial", 11, 1, negro);
@@ -3597,7 +3739,7 @@ namespace ERP_COMPLETO
                             if (PAN_PEE.equi.dn.REALIZO.Texts == "ALAN SOLÍS PÉREZ")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 35f);
+                                firmaImg.ScaleToFit(110f, 30f);
 
                                 float center = writer.PageSize.Left + 98;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
@@ -3611,7 +3753,7 @@ namespace ERP_COMPLETO
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
                                 firmaImg.ScaleToFit(110f, 80f);
 
-                                float center = writer.PageSize.Left + 90;
+                                float center = writer.PageSize.Left + 85;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
                                 firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 10);
 
@@ -3707,7 +3849,7 @@ namespace ERP_COMPLETO
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
                                 firmaImg.ScaleToFit(80f, 43f);
 
-                                float center = writer.PageSize.Left + 95;
+                                float center = writer.PageSize.Left + 100;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
                                 firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
 
@@ -3738,16 +3880,12 @@ namespace ERP_COMPLETO
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-
-
-
-
                             else
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
                                 firmaImg.ScaleToFit(100f, 47f);
 
-                                float center = writer.PageSize.Left + 100;
+                                float center = writer.PageSize.Left + 98;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
                                 firmaY = writer.PageSize.GetBottom(doc.BottomMargin);
 
@@ -3810,13 +3948,13 @@ namespace ERP_COMPLETO
                         table2.SpacingAfter = 0;
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("OBSERVACIONES:", letra_negra_bold_7));
-                        cell2.BackgroundColor = gris_oscuro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BackgroundColor = azul_oscuro;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         cell2.FixedHeight = 35f;
@@ -3842,12 +3980,12 @@ namespace ERP_COMPLETO
 
                         cell2 = new PdfPCell(new Phrase(TXT_OBS, letraDinamica));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 21;
                         table2.AddCell(cell2);
@@ -3863,9 +4001,10 @@ namespace ERP_COMPLETO
                         table2.TotalWidth = 560;
                         table2.LockedWidth = true;
 
-                        PdfPCell cell2 = new PdfPCell(new Phrase("MÉTODOS DE\r\nREFERENCIA:", letra_negra_bold_6));
-                        cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = negro;
+                        PdfPCell cell2 = new PdfPCell(new Phrase("MÉTODOS DE\r\nREFERENCIA:", letra_negra_bold_7));
+                        cell2.BackgroundColor = azul_claro;
+                        cell2.BorderColor = azul_oscuro;
+                        cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
@@ -3875,11 +4014,12 @@ namespace ERP_COMPLETO
 
                         cell2 = new PdfPCell();
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = negro;
+                        cell2.BorderColor = azul_oscuro;
+                        cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        cell2.PaddingTop = 2f;
-                        cell2.PaddingBottom = 2f;
+                        cell2.PaddingTop = 1f;
+                        cell2.PaddingBottom = 3f;
                         cell2.Colspan = 21;
 
                         // Primer bloque de texto
@@ -3952,8 +4092,386 @@ namespace ERP_COMPLETO
 
                     sinencabeza_lab = false;
                 }
+                
                 if (sinencabeza_lab == true)
                 {
+                    BaseColor negro = new BaseColor(10, 10, 10);
+                    BaseColor blanco = new BaseColor(255, 255, 255);
+                    BaseColor azul_claro = new BaseColor(197, 217, 241);
+                    BaseColor azul_oscuro = new BaseColor(83, 141, 213);
+                    BaseColor gris_oscuro_border = new BaseColor(176, 176, 176);
+
+                    iTextSharp.text.Font title = FontFactory.GetFont("Arial", 11, 1, negro);
+                    iTextSharp.text.Font subtitle = FontFactory.GetFont("Arial", 8, 0, negro);
+                    iTextSharp.text.Font letra_negra_regular_4 = FontFactory.GetFont("Arial", 4, 0, negro);
+                    iTextSharp.text.Font letra_negra_regular_5 = FontFactory.GetFont("Arial", 5, 0, negro);
+                    iTextSharp.text.Font letra_negra_bold_6 = FontFactory.GetFont("Arial", 6, 1, negro);
+                    iTextSharp.text.Font letra_negra_regular_6 = FontFactory.GetFont("Arial", 6, 0, negro);
+                    iTextSharp.text.Font letra_negra_bold_7 = FontFactory.GetFont("Arial", 7f, 1, negro);
+                    iTextSharp.text.Font letra_negra_regular_7 = FontFactory.GetFont("Arial", 7f, 0, negro);
+               
+                    PdfContentByte canvas = writer.DirectContent;
+                    Paragraph paragraph1 = new Paragraph("PORCENTAJE DE COMPACTACIÓN", title);
+                    Paragraph paragraph1_1 = new Paragraph("MEDIANTE DENSÍMETRO ELECTROMAGNÉTICO", title);
+                    Paragraph paragraph2 = new Paragraph("EE-LAB-21", subtitle);
+                    AddParagraphAtPosition(paragraph1, canvas, 12, 758);    // X  -  Y
+                    AddParagraphAtPosition(paragraph1_1, canvas, 12, 745);    // X  -  Y
+                    AddParagraphAtPosition(paragraph2, canvas, 12, 732);   // X  -  Y
+
+
+
+                    // INICIO DE FIRMA
+                    base.OnEndPage(writer, doc);
+                    PdfContentByte cb = writer.DirectContent;
+                    if (firmaBytes2 != null && firmaBytes2.Length > 0)
+                    {
+                        try
+                        {
+                            float firmaX, firmaY;
+
+                            if (PAN_PEE.equi.dn.REALIZO.Texts == "ALAN SOLÍS PÉREZ")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(110f, 30f);
+
+                                float center = writer.PageSize.Left + 98;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin) + 12;
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "CRISTIAN GONZÁLEZ BARRERA")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(110f, 80f);
+
+                                float center = writer.PageSize.Left + 85;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 10);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DAVID OMAR JIMÉNEZ CARRADA")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(135f, 90f);
+
+                                float center = writer.PageSize.Left + 99;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 15);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DERIAN URIEL RIVERA SEVERINO")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(140f, 100f);
+
+                                float center = writer.PageSize.Left + 97;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 23);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DIANA NAYELI BALDERAS REYES")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(100f, 67f);
+
+                                float center = writer.PageSize.Left + 100;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 15);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "JONATHAN YOVANI GONZÁLEZ GÓMEZ")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(100f, 90f);
+
+                                float center = writer.PageSize.Left + 95;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 15);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "JOSÉ ANTONIO GÁLVEZ DOMÍNGUEZ")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(110f, 90f);
+
+                                float center = writer.PageSize.Left + 95;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "MAURICIO ESPINOZA NIETO")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(95f, 80f);
+
+                                float center = writer.PageSize.Left + 98;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 17);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "CECILIA SÁNCHEZ ALANIS")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(70f, 38f);
+
+                                float center = writer.PageSize.Left + 98;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 9);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "EDGAR GUILLERMO CRUZ MURILLO")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(80f, 43f);
+
+                                float center = writer.PageSize.Left + 100;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "RICARDO DAVID GÓNZALEZ OLALDE")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(80f, 40f);
+
+                                float center = writer.PageSize.Left + 95;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 9);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "TERESA JIMÉNEZ MEDINA")
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(70f, 30f);
+
+                                float center = writer.PageSize.Left + 100;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 12);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                            else
+                            {
+                                Image firmaImg = Image.GetInstance(firmaBytes2);
+                                firmaImg.ScaleToFit(100f, 47f);
+
+                                float center = writer.PageSize.Left + 98;
+                                firmaX = center - (firmaImg.ScaledWidth / 2);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin);
+
+                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
+                                cb.AddImage(firmaImg);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine("Error al agregar la firma: " + ex.Message);
+                        }
+                    }
+
+
+
+                    PdfContentByte fc = writer.DirectContent;
+                    BaseFont fuente = BaseFont.CreateFont(BaseFont.HELVETICA_BOLD, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    fc.BeginText();
+                    fc.SetFontAndSize(fuente, 6);
+                    fc.SetColorFill(BaseColor.BLACK);
+
+                    // -------------------------- *** REVISO Y APROBO --------------------------    
+                    float baseY = writer.PageSize.GetBottom(doc.BottomMargin) + 45;
+                    float leftX = writer.PageSize.Left + 100; // izquierda
+                    float centerX = (writer.PageSize.Left + writer.PageSize.Right) / 2; // centro
+                    float rightX = writer.PageSize.Right - 100; // derecha
+
+                    fc.ShowTextAligned(Element.ALIGN_CENTER, "REALIZÒ / APROBÓ:", leftX, baseY, 0);
+                    fc.ShowTextAligned(Element.ALIGN_CENTER, "________________________________________", leftX, baseY - 25, 0);
+                    fc.ShowTextAligned(Element.ALIGN_CENTER, PAN_PEE.equi.dn.REALIZO.Texts, leftX, baseY - 33, 0);
+                    // fc.ShowTextAligned(Element.ALIGN_CENTER, "CARGO", leftX, baseY - 40, 0);  //44
+                    fc.EndText();
+
+
+                    // ------------------------- **FIRMA DEL CLIENTE -------------------------
+                    fc.BeginText();
+                    fc.ShowTextAligned(Element.ALIGN_CENTER, "FIRMA DEL CLIENTE:", rightX, baseY, 0);
+                    fc.ShowTextAligned(Element.ALIGN_CENTER, "________________________________________", rightX, baseY - 25, 0);
+                    fc.EndText();
+
+                    PdfContentByte fcliente = writer.DirectContent;
+                    BaseFont fuente_cliente = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    fcliente.BeginText();
+                    fcliente.SetFontAndSize(fuente_cliente, 6);
+                    fcliente.SetColorFill(BaseColor.BLACK);
+                    fcliente.ShowTextAligned(Element.ALIGN_CENTER, "Nombre y Firma", rightX, baseY - 33, 0);
+                    fcliente.EndText();
+
+
+
+                    // OBSERVACIONES: 
+                    try
+                    {
+                        PdfPTable table2 = new PdfPTable(25);
+                        table2.TotalWidth = 560;
+                        table2.LockedWidth = true;
+                        table2.SpacingBefore = 0;
+                        table2.SpacingAfter = 0;
+
+                        PdfPCell cell2 = new PdfPCell(new Phrase("OBSERVACIONES:", letra_negra_bold_7));
+                        cell2.BackgroundColor = azul_oscuro;
+                        cell2.BorderColor = azul_oscuro;
+                        cell2.BorderWidth = 0.7f;
+                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingTop = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 1f;
+                        cell2.Colspan = 4;
+                        cell2.FixedHeight = 35f;
+                        table2.AddCell(cell2);
+
+
+                        string TXT_OBS = PAN_PEE.equi.dn.OBSERVACIONES.Texts.ToUpper();
+                        float tamañoFuente = 7f;
+                        float tamañoMinimo = 5.9f;
+                        float anchoCelda = (560f / 18f) * 16f - 4f;  //560->TotalWidth = 560;  // 18f->PdfPTable table2 = new PdfPTable(14);  //   16f->cell2.Colspan = 8;  // 4f ->padding interno de la celda
+
+                        BaseFont bf = BaseFont.CreateFont(BaseFont.HELVETICA, BaseFont.CP1252, false);
+                        while (tamañoFuente >= tamañoMinimo)
+                        {
+                            float anchoTexto = bf.GetWidthPoint(TXT_OBS, tamañoFuente);
+
+                            if (anchoTexto <= anchoCelda)
+                                break;
+
+                            tamañoFuente -= 0.2f;
+                        }
+                        Font letraDinamica = new Font(bf, tamañoFuente, 0, negro);
+
+                        cell2 = new PdfPCell(new Phrase(TXT_OBS, letraDinamica));
+                        cell2.BackgroundColor = blanco;
+                        cell2.BorderColor = azul_oscuro;
+                        cell2.BorderWidth = 0.7f;
+                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingTop = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 1f;
+                        cell2.Colspan = 21;
+                        table2.AddCell(cell2);
+
+                        table2.WriteSelectedRows(0, -1, doc.LeftMargin - 10, writer.PageSize.GetBottom(doc.BottomMargin) + 120, writer.DirectContent);
+                    }
+                    catch { }
+
+                    // MÉTODOS DE REFERENCIA:
+                    try
+                    {
+                        PdfPTable table2 = new PdfPTable(25);
+                        table2.TotalWidth = 560;
+                        table2.LockedWidth = true;
+
+                        PdfPCell cell2 = new PdfPCell(new Phrase("MÉTODOS DE\r\nREFERENCIA:", letra_negra_bold_7));
+                        cell2.BackgroundColor = azul_claro;
+                        cell2.BorderColor = azul_oscuro;
+                        cell2.BorderWidth = 0.7f;
+                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingTop = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.Colspan = 4;
+                        table2.AddCell(cell2);
+
+                        cell2 = new PdfPCell();
+                        cell2.BackgroundColor = blanco;
+                        cell2.BorderColor = azul_oscuro;
+                        cell2.BorderWidth = 0.7f;
+                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingTop = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.Colspan = 21;
+
+                        // Primer bloque de texto
+                        Paragraph p1 = new Paragraph(
+                            "ASTM D7830/D7830M-14(2021)e1, ASTM D698 − 12, ASTM D1557 − 12, ASTM D2216 - 10, ASTM D4959 - 16,",
+                            letra_negra_bold_6
+                        );
+                        p1.Alignment = Element.ALIGN_CENTER;
+
+                        // Segundo bloque con separación
+                        Paragraph p2 = new Paragraph(
+                            "PLAN DE MUESTREO \"LIEP-04b MUESTREO\"",
+                            letra_negra_bold_6
+                        );
+                        p2.Alignment = Element.ALIGN_CENTER;
+                        p2.SpacingBefore = 2f; // aquí controlas el espacio sin usar \r\n\r\n
+
+                        cell2.AddElement(p1);
+                        cell2.AddElement(p2);
+                        table2.AddCell(cell2);
+
+                        table2.WriteSelectedRows(0, -1, doc.LeftMargin - 10, writer.PageSize.GetBottom(doc.BottomMargin) + 85, writer.DirectContent);
+                    }
+                    catch { }
+
+                    //ESTE REPORTE SOLO CORRESPONDE
+                    try
+                    {
+                        PdfPTable table2 = new PdfPTable(14);
+                        table2.TotalWidth = 550;
+                        table2.LockedWidth = true;
+                        table2.SpacingBefore = 0;
+                        table2.SpacingAfter = 0;
+
+                        PdfPCell cell2 = new PdfPCell(new Phrase(" ", letra_negra_regular_4));
+                        cell2.BackgroundColor = blanco;
+                        cell2.Border = 0;
+                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingTop = 1f;
+                        cell2.Colspan = 4;
+                        table2.AddCell(cell2);
+
+                        cell2 = new PdfPCell(new Phrase("ESTE REPORTE SOLO CORRESPONDE A LA(S) MUESTRA(S) ENSAYADA(S)", letra_negra_regular_4));
+                        cell2.BackgroundColor = blanco;
+                        cell2.Border = 0;
+                        cell2.HorizontalAlignment = Element.ALIGN_RIGHT;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingTop = 1f;
+                        cell2.Colspan = 10;
+                        table2.AddCell(cell2);
+
+                        table2.WriteSelectedRows(0, -1, doc.LeftMargin - 2, writer.PageSize.GetBottom(doc.BottomMargin) + 1, writer.DirectContent);
+                    }
+                    catch { }
+
+
                     encabeza_lab = false;
                 }
 
@@ -4060,11 +4578,11 @@ namespace ERP_COMPLETO
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 1f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
 
@@ -4075,7 +4593,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4099,7 +4617,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4111,7 +4629,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 2f;
                 cell2.Colspan = 13;
                 table2.AddCell(cell2);
@@ -4120,22 +4638,22 @@ namespace ERP_COMPLETO
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 1f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(CLAVE_OBRA.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(CLAVE_OBRA.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4179,7 +4697,7 @@ namespace ERP_COMPLETO
 
                     tamañoFuente -= 0.2f;
                 }
-                Font letraDinamica = new Font(bf, tamañoFuente, 0, negro);
+                Font letraDinamica = new Font(bf, tamañoFuente, 1, negro);
 
                 cell2 = new PdfPCell(new Phrase(textoCliente, letraDinamica));
                 cell2.BackgroundColor = blanco;
@@ -4232,7 +4750,7 @@ namespace ERP_COMPLETO
 
                     tamañoFuente -= 0.2f;
                 }
-                Font letraDinamica = new Font(bf, tamañoFuente, 0, negro);
+                Font letraDinamica = new Font(bf, tamañoFuente, 1, negro);
 
                 cell2 = new PdfPCell(new Phrase(textoObra, letraDinamica));
                 cell2.BackgroundColor = blanco;
@@ -4265,13 +4783,13 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 cell2.FixedHeight = 20f;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(ATENCION.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(ATENCION.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
@@ -4287,11 +4805,11 @@ namespace ERP_COMPLETO
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 1f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
 
@@ -4302,7 +4820,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4321,11 +4839,11 @@ namespace ERP_COMPLETO
 
                 PdfPCell cell2 = new PdfPCell(new Phrase("DATOS DE PROYECTO", letra_negra_bold_7));
                 cell2.BackgroundColor = azul_oscuro;
-                cell2.BorderColor = gris_oscuro_border;
+                cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                cell2.PaddingTop = 2f;
+                cell2.PaddingTop = 1f;
                 cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 14;
@@ -4350,19 +4868,19 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(TIPO_ENSAYE.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(TIPO_ENSAYE.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 2f;
                 cell2.Colspan = 9;
                 table2.AddCell(cell2);
@@ -4371,22 +4889,22 @@ namespace ERP_COMPLETO
                 cell2.BackgroundColor = azul_claro;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 1f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 3f;
                 cell2.Colspan = 8;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(COMPACTACION_PROYECTO.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(COMPACTACION_PROYECTO.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4410,19 +4928,19 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 3f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(TIPO_CAPA.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(TIPO_CAPA.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 2f;
                 cell2.Colspan = 9;
                 table2.AddCell(cell2);
@@ -4431,22 +4949,22 @@ namespace ERP_COMPLETO
                 cell2.BackgroundColor = azul_claro;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 1f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 3f;
                 cell2.Colspan = 8;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(MVSM.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(MVSM.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4484,7 +5002,7 @@ namespace ERP_COMPLETO
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
                 cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 2f;
+                cell2.PaddingLeft = 1f;
                 cell2.Colspan = 13;
                 table2.AddCell(cell2);
 
@@ -4500,7 +5018,7 @@ namespace ERP_COMPLETO
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase(HUMEDAD_OPTIMA.Texts, letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase(HUMEDAD_OPTIMA.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
@@ -4530,7 +5048,7 @@ namespace ERP_COMPLETO
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                cell2.PaddingTop = 2f;
+                cell2.PaddingTop = 1f;
                 cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 14;
@@ -4552,11 +5070,11 @@ namespace ERP_COMPLETO
                 cell2.BackgroundColor = azul_claro;
                 cell2.BorderColor = azul_oscuro;
                 cell2.BorderWidth = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
+                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 3f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 cell2.FixedHeight = 18f;
                 table2.AddCell(cell2);
@@ -4568,8 +5086,8 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 2f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 1f;
                 cell2.Colspan = 5;
                 table2.AddCell(cell2);
 
@@ -4580,7 +5098,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4592,7 +5110,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4604,7 +5122,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4616,7 +5134,7 @@ namespace ERP_COMPLETO
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 4;
                 table2.AddCell(cell2);
@@ -4633,92 +5151,86 @@ namespace ERP_COMPLETO
                 table2.SpacingBefore = 8;
                 table2.SpacingAfter = 0;
 
-                PdfPCell cell2 = new PdfPCell(new Phrase("Nº SONDEO", letra_negra_bold_7));
-                cell2.BackgroundColor = azul_oscuro;
-                cell2.BorderColorLeft = azul_oscuro;
-                cell2.BorderColorRight = gris_oscuro_border;
-                cell2.BorderColorTop = azul_oscuro;
-                cell2.BorderColorBottom = azul_oscuro;
-                cell2.BorderWidthLeft = 0.7f;
-                cell2.BorderWidthRight = 0.7f;
-                cell2.BorderWidthTop = 0.7f;
-                cell2.BorderWidthBottom = 0.7f;
-                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
-                cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 3f;
-                cell2.Colspan = 2;
-                table2.AddCell(cell2);
-
-                cell2 = new PdfPCell(new Phrase("LOCALIZACIÓN", letra_negra_regular_7));
+                PdfPCell cell2 = new PdfPCell(new Phrase("Nº SONDEO", letra_negra_bold_6));
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
-                cell2.PaddingLeft = 2f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 1f;
+                cell2.Colspan = 2;
+                table2.AddCell(cell2);
+
+                cell2 = new PdfPCell(new Phrase("LOCALIZACIÓN", letra_negra_bold_6));
+                cell2.BackgroundColor = azul_oscuro;
+                cell2.BorderColor = gris_oscuro_border;
+                cell2.BorderWidth = 0.7f;
+                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                cell2.PaddingTop = 1f;
+                cell2.PaddingBottom = 3f;
+                cell2.PaddingLeft = 1f;
                 cell2.Colspan = 11;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase("CAPA", letra_negra_bold_7));
+                cell2 = new PdfPCell(new Phrase("CAPA", letra_negra_bold_6));
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 2;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase("ESPESOR \r\ncm", letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase("ESPESOR \r\ncm", letra_negra_bold_6));
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 2;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase("HUMEDAD \r\nEN SITIO\r\n %", letra_negra_bold_7));
+                cell2 = new PdfPCell(new Phrase("HUMEDAD \r\nEN SITIO\r\n %", letra_negra_bold_6));
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 2;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase("MASA VOLUMÉTRICA SECA EN SITIO\r\nkg·m⁻³", letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase("MASA VOLUMÉTRICA SECA EN SITIO\r\nkg·m⁻³", letra_negra_bold_6));
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 3;
                 table2.AddCell(cell2);
 
-                cell2 = new PdfPCell(new Phrase("% DE COMPACTACIÓN", letra_negra_regular_7));
+                cell2 = new PdfPCell(new Phrase("% DE COMPACTACIÓN", letra_negra_bold_6));
                 cell2.BackgroundColor = azul_oscuro;
                 cell2.BorderColor = gris_oscuro_border;
                 cell2.BorderWidth = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
-                cell2.PaddingBottom = 4f;
+                cell2.PaddingBottom = 3f;
                 cell2.PaddingLeft = 1f;
                 cell2.Colspan = 3;
                 table2.AddCell(cell2);
@@ -4747,8 +5259,7 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("", letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
-                        cell2.BorderWidth = 0.7f;
+                        cell2.BorderColor = blanco;
                         cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
@@ -4761,22 +5272,22 @@ namespace ERP_COMPLETO
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(NO_INFORME.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase("LIE.DE." + NO_INFORME.Texts, letra_negra_regular_7));
                         cell2.BackgroundColor = blanco;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -4800,7 +5311,7 @@ namespace ERP_COMPLETO
                         cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -4812,7 +5323,7 @@ namespace ERP_COMPLETO
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 2f;
                         cell2.Colspan = 13;
                         table2.AddCell(cell2);
@@ -4821,22 +5332,22 @@ namespace ERP_COMPLETO
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(CLAVE_OBRA.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(CLAVE_OBRA.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -4880,7 +5391,7 @@ namespace ERP_COMPLETO
 
                             tamañoFuente -= 0.2f;
                         }
-                        Font letraDinamica = new Font(bf, tamañoFuente, 0, negro);
+                        Font letraDinamica = new Font(bf, tamañoFuente, 1, negro);
 
                         cell2 = new PdfPCell(new Phrase(textoCliente, letraDinamica));
                         cell2.BackgroundColor = blanco;
@@ -4933,7 +5444,7 @@ namespace ERP_COMPLETO
 
                             tamañoFuente -= 0.2f;
                         }
-                        Font letraDinamica = new Font(bf, tamañoFuente, 0, negro);
+                        Font letraDinamica = new Font(bf, tamañoFuente, 1, negro);
 
                         cell2 = new PdfPCell(new Phrase(textoObra, letraDinamica));
                         cell2.BackgroundColor = blanco;
@@ -4966,13 +5477,13 @@ namespace ERP_COMPLETO
                         cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         cell2.FixedHeight = 20f;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(ATENCION.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(ATENCION.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
@@ -4988,11 +5499,11 @@ namespace ERP_COMPLETO
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
@@ -5003,7 +5514,7 @@ namespace ERP_COMPLETO
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -5022,11 +5533,11 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("DATOS DE PROYECTO", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_oscuro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        cell2.PaddingTop = 2f;
+                        cell2.PaddingTop = 1f;
                         cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 14;
@@ -5046,48 +5557,48 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("TIPO DE ENSAYE:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(TIPO_ENSAYE.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(TIPO_ENSAYE.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 2f;
                         cell2.Colspan = 9;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase("% DE COMPACTACIÓN DEL PROYECTO:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 3f;
                         cell2.Colspan = 8;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(COMPACTACION_PROYECTO.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(COMPACTACION_PROYECTO.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -5106,48 +5617,48 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("TIPO DE CAPA:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 3f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(TIPO_CAPA.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(TIPO_CAPA.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 2f;
                         cell2.Colspan = 9;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase("MASA VOLUMÉTRICA SECA MÁXIMA, kg·m⁻³:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 3f;
                         cell2.Colspan = 8;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(MVSM.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(MVSM.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -5166,7 +5677,7 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("PROCEDENCIA:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -5179,19 +5690,19 @@ namespace ERP_COMPLETO
 
                         cell2 = new PdfPCell(new Phrase(PROCEDENCIA.Texts, letra_negra_regular_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
                         cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 2f;
+                        cell2.PaddingLeft = 1f;
                         cell2.Colspan = 13;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase("HUMEDAD OPTIMA, %:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -5201,9 +5712,9 @@ namespace ERP_COMPLETO
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase(HUMEDAD_OPTIMA.Texts, letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase(HUMEDAD_OPTIMA.Texts, letra_negra_bold_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
@@ -5227,11 +5738,11 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("DATOS DEL EQUIPO", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_oscuro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        cell2.PaddingTop = 2f;
+                        cell2.PaddingTop = 1f;
                         cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 14;
@@ -5251,73 +5762,73 @@ namespace ERP_COMPLETO
 
                         PdfPCell cell2 = new PdfPCell(new Phrase("EQUIPO:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
+                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 3f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         cell2.FixedHeight = 18f;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase(MEDIDOR.Texts, letra_negra_regular_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 2f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 1f;
                         cell2.Colspan = 5;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase("MODELO:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase(MODELO.Texts, letra_negra_regular_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase("No. DE SERIE:", letra_negra_bold_7));
                         cell2.BackgroundColor = azul_claro;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
 
                         cell2 = new PdfPCell(new Phrase(NO_SERIE.Texts, letra_negra_regular_7));
                         cell2.BackgroundColor = blanco;
-                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderColor = azul_oscuro;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 4;
                         table2.AddCell(cell2);
@@ -5334,86 +5845,86 @@ namespace ERP_COMPLETO
                         table2.SpacingBefore = 8;
                         table2.SpacingAfter = 0;
 
-                        PdfPCell cell2 = new PdfPCell(new Phrase("Nº SONDEO", letra_negra_bold_7));
-                        cell2.BackgroundColor = azul_oscuro;
-                        cell2.BorderColor = gris_oscuro_border;
-                        cell2.BorderWidth = 0.7f;
-                        cell2.HorizontalAlignment = Element.ALIGN_LEFT;
-                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
-                        cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 3f;
-                        cell2.Colspan = 2;
-                        table2.AddCell(cell2);
-
-                        cell2 = new PdfPCell(new Phrase("LOCALIZACIÓN", letra_negra_regular_7));
+                        PdfPCell cell2 = new PdfPCell(new Phrase("Nº SONDEO", letra_negra_bold_6));
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
-                        cell2.PaddingLeft = 2f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 1f;
+                        cell2.Colspan = 2;
+                        table2.AddCell(cell2);
+
+                        cell2 = new PdfPCell(new Phrase("LOCALIZACIÓN", letra_negra_bold_6));
+                        cell2.BackgroundColor = azul_oscuro;
+                        cell2.BorderColor = gris_oscuro_border;
+                        cell2.BorderWidth = 0.7f;
+                        cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                        cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                        cell2.PaddingTop = 1f;
+                        cell2.PaddingBottom = 3f;
+                        cell2.PaddingLeft = 1f;
                         cell2.Colspan = 11;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase("CAPA", letra_negra_bold_7));
+                        cell2 = new PdfPCell(new Phrase("CAPA", letra_negra_bold_6));
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 2;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase("ESPESOR \r\ncm", letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase("ESPESOR \r\ncm", letra_negra_bold_6));
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 2;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase("HUMEDAD \r\nEN SITIO\r\n %", letra_negra_bold_7));
+                        cell2 = new PdfPCell(new Phrase("HUMEDAD \r\nEN SITIO\r\n %", letra_negra_bold_6));
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 2;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase("MASA VOLUMÉTRICA SECA EN SITIO\r\nkg·m⁻³", letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase("MASA VOLUMÉTRICA SECA EN SITIO\r\nkg·m⁻³", letra_negra_bold_6));
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 3;
                         table2.AddCell(cell2);
 
-                        cell2 = new PdfPCell(new Phrase("% DE COMPACTACIÓN", letra_negra_regular_7));
+                        cell2 = new PdfPCell(new Phrase("% DE COMPACTACIÓN", letra_negra_bold_6));
                         cell2.BackgroundColor = azul_oscuro;
                         cell2.BorderColor = gris_oscuro_border;
                         cell2.BorderWidth = 0.7f;
                         cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                         cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                         cell2.PaddingTop = 1f;
-                        cell2.PaddingBottom = 4f;
+                        cell2.PaddingBottom = 3f;
                         cell2.PaddingLeft = 1f;
                         cell2.Colspan = 3;
                         table2.AddCell(cell2);
@@ -5437,7 +5948,7 @@ namespace ERP_COMPLETO
                     table.TotalWidth = 560;
                     table.LockedWidth = true;
 
-                    PdfPCell cell1 = new PdfPCell(new Phrase(dr.Cells[1].Value.ToString(), letra_negra_regular_6));
+                    PdfPCell cell1 = new PdfPCell(new Phrase(dr.Cells[1].Value.ToString(), letra_negra_bold_6));
                     cell1.BackgroundColor = blanco;
                     cell1.BorderColor = azul_oscuro;
                     cell1.BorderWidth = 0.7f;
@@ -5445,12 +5956,12 @@ namespace ERP_COMPLETO
                     cell1.PaddingTop = 1f;
                     cell1.PaddingBottom = 3f;
                     cell1.Colspan = 2;
-                    cell1.FixedHeight = (paginaActual == 1) ? 25f : 25f;
+                    cell1.FixedHeight = (paginaActual == 1) ? 27f : 27f;
                     cell1.HorizontalAlignment = Element.ALIGN_CENTER;
                     cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(cell1);
 
-                    cell1 = new PdfPCell(new Phrase(dr.Cells[2].Value.ToString().ToUpper(), letra_negra_bold_6));
+                    cell1 = new PdfPCell(new Phrase(dr.Cells[2].Value.ToString().ToUpper(), letra_negra_regular_6));
                     cell1.BackgroundColor = blanco;
                     cell1.BorderColor = azul_oscuro;
                     cell1.BorderWidth = 0.7f;
@@ -5486,7 +5997,14 @@ namespace ERP_COMPLETO
                     cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(cell1);
 
-                    cell1 = new PdfPCell(new Phrase(dr.Cells[5].Value.ToString().ToUpper(), letra_negra_bold_6));
+
+                    var cellValue = dr.Cells[5].Value;
+                    string valor = cellValue != null &&
+                    decimal.TryParse(cellValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num)
+                    ? Math.Round(num, 1, MidpointRounding.AwayFromZero).ToString("0.0", CultureInfo.InvariantCulture)
+                    : "";
+
+                    cell1 = new PdfPCell(new Phrase(valor, letra_negra_regular_6));
                     cell1.BackgroundColor = blanco;
                     cell1.BorderColor = azul_oscuro;
                     cell1.BorderWidth = 0.7f;
@@ -5498,7 +6016,17 @@ namespace ERP_COMPLETO
                     cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(cell1);
 
-                    cell1 = new PdfPCell(new Phrase(dr.Cells[6].Value.ToString().ToUpper(), letra_negra_bold_6));
+
+
+
+
+                    var cellValue6 = dr.Cells[6].Value;
+                    string valor6 = cellValue6 != null &&
+                    decimal.TryParse(cellValue6.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num6)
+                        ? Math.Round(num6, 0, MidpointRounding.AwayFromZero).ToString("0", CultureInfo.InvariantCulture)
+                        : "";
+
+                    cell1 = new PdfPCell(new Phrase(valor6, letra_negra_regular_6));
                     cell1.BackgroundColor = blanco;
                     cell1.BorderColor = azul_oscuro;
                     cell1.BorderWidth = 0.7f;
@@ -5510,7 +6038,17 @@ namespace ERP_COMPLETO
                     cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(cell1);
 
-                    cell1 = new PdfPCell(new Phrase(dr.Cells[7].Value.ToString().ToUpper(), letra_negra_bold_6));
+
+
+
+
+                    var cellValue7 = dr.Cells[7].Value;
+                    string valor7 = cellValue7 != null &&
+                    decimal.TryParse(cellValue7.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num7)
+                    ? Math.Round(num7, 1, MidpointRounding.AwayFromZero).ToString("F1", CultureInfo.InvariantCulture)
+                    : "";
+
+                    cell1 = new PdfPCell(new Phrase(valor7, letra_negra_bold_6));
                     cell1.BackgroundColor = blanco;
                     cell1.BorderColor = azul_oscuro;
                     cell1.BorderWidth = 0.7f;
@@ -5545,14 +6083,14 @@ namespace ERP_COMPLETO
 
             PdfPCell leyendaCell = new PdfPCell(new Phrase("---------------- FIN DE DATOS ----------------", letra_negra_regular_6));
             leyendaCell.BackgroundColor = blanco;
-            leyendaCell.BorderColor = gris_oscuro_border;
+            leyendaCell.BorderColor = azul_oscuro;
             leyendaCell.BorderWidth = 0.7f;
             leyendaCell.PaddingLeft = 1f;
             leyendaCell.PaddingTop = 1f;
             leyendaCell.PaddingBottom = 3f;
             leyendaCell.HorizontalAlignment = Element.ALIGN_CENTER;
             leyendaCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            leyendaCell.FixedHeight = (paginaActual == 1) ? 25f : 25f;
+            leyendaCell.FixedHeight = (paginaActual == 1) ? 27f : 27f;
             leyendaCell.Colspan = 14;
             tablaLeyenda.AddCell(leyendaCell);
             doc.Add(tablaLeyenda);
@@ -5570,20 +6108,20 @@ namespace ERP_COMPLETO
 
                 PdfPCell cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
                 cell_r.PaddingBottom = 3f;
                 cell_r.Colspan = 2;
-                cell_r.FixedHeight = (paginaActual == 1) ? 25f : 25f;
+                cell_r.FixedHeight = (paginaActual == 1) ? 27f : 27f;
                 cell_r.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell_r.VerticalAlignment = Element.ALIGN_MIDDLE;
                 table_r.AddCell(cell_r);
 
                 cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
@@ -5595,7 +6133,7 @@ namespace ERP_COMPLETO
 
                 cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
@@ -5607,7 +6145,7 @@ namespace ERP_COMPLETO
 
                 cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
@@ -5619,7 +6157,7 @@ namespace ERP_COMPLETO
 
                 cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
@@ -5631,7 +6169,7 @@ namespace ERP_COMPLETO
 
                 cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
@@ -5643,7 +6181,7 @@ namespace ERP_COMPLETO
 
                 cell_r = new PdfPCell(new Phrase("---", letra_negra_regular_6));
                 cell_r.BackgroundColor = blanco;
-                cell_r.BorderColor = gris_oscuro_border;
+                cell_r.BorderColor = azul_oscuro;
                 cell_r.BorderWidth = 0.7f;
                 cell_r.PaddingLeft = 1f;
                 cell_r.PaddingTop = 1f;
@@ -5655,8 +6193,6 @@ namespace ERP_COMPLETO
 
                 doc.Add(table_r);
             }
-
-
 
 
 
