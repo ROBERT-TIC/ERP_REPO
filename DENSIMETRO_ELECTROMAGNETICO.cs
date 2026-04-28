@@ -50,6 +50,7 @@ namespace ERP_COMPLETO
 
         private void DENSIMETRO_ELECTROMAGNETICO_Load(object sender, EventArgs e)
         {
+
             consulta_densimetro();
             CargarTecnicosActivos();
 
@@ -384,6 +385,8 @@ namespace ERP_COMPLETO
 
 
 
+
+
         private void DGV_PADRON_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             FORMULA_1(e.RowIndex);
@@ -687,23 +690,105 @@ namespace ERP_COMPLETO
             }
         }
 
+        private void altoButton1_Click(object sender, EventArgs e)
+        {
+
+            string query = @"UPDATE densimetro_referencias
+                     SET FECHA_ENSAYE = @FECHA_ENSAYE, 
+                         CLAVE_OBRA = @CLAVE_OBRA, 
+                         NO_INFORME = @NO_INFORME, 
+                        OBRA = @OBRA, 
+                         CLIENTE = @CLIENTE, 
+                         ATENCION = @ATENCION, 
+                         FECHA_INFORME = @FECHA_INFORME, 
+                         MATERIAL = @MATERIAL, 
+                        COMPACTACION_PROYECTO = @COMPACTACION_PROYECTO, 
+                        PROCEDENCIA = @PROCEDENCIA, 
+                        HUMEDAD_OPTIMA = @HUMEDAD_OPTIMA, 
+                         USO_MATERIAL = @USO_MATERIAL, 
+                        UBICACION = @UBICACION, 
+                         MEDIDOR = @MEDIDOR, 
+                         MARCA = @MARCA, 
+                      MODELO = @MODELO, 
+                        NO_SERIE = @NO_SERIE, 
+                        OBSERVACIONES = @OBSERVACIONES, 
+                        TEMPERATURA = @TEMPERATURA, 
+                         HUMEDAD_RELATIVA = @HUMEDAD_RELATIVA, 
+                        REVISO = @REVISO, 
+                         REALIZO = @REALIZO ,
+                       TIPO_CAPA = @TIPO_CAPA, 
+                       TIPO_ENSAYE = @TIPO_ENSAYE, 
+                         NO_CALIDAD = @NO_CALIDAD,
+                        MVSM = @MVSM     
+                        
+                     WHERE ID_SEGUIMIENTO = @ID_SEGUIMIENTO;";
+
+            using (MySqlCommand cmd = new MySqlCommand(query, CONEXION_REMOTO_PND.USR))
+            {
+                // Asignación de parámetros
+                cmd.Parameters.AddWithValue("@FECHA_ENSAYE", FECHA_ENSAYE.Text);
+                cmd.Parameters.AddWithValue("@CLAVE_OBRA", CLAVE_OBRA.Texts);
+                cmd.Parameters.AddWithValue("@NO_INFORME", NO_INFORME.Texts);
+                cmd.Parameters.AddWithValue("@OBRA", OBRA.Texts);
+                cmd.Parameters.AddWithValue("@CLIENTE", CLIENTE.Texts);
+                cmd.Parameters.AddWithValue("@ATENCION", ATENCION.Texts);
+                cmd.Parameters.AddWithValue("@FECHA_INFORME", FECHA_INFORME.Text);
+                cmd.Parameters.AddWithValue("@MATERIAL", MATERIAL.Texts);  // fecha de colado
+                cmd.Parameters.AddWithValue("@COMPACTACION_PROYECTO", COMPACTACION_PROYECTO.Texts);
+                cmd.Parameters.AddWithValue("@PROCEDENCIA", PROCEDENCIA.Texts);
+                cmd.Parameters.AddWithValue("@HUMEDAD_OPTIMA", HUMEDAD_OPTIMA.Texts);
+                cmd.Parameters.AddWithValue("@USO_MATERIAL", USO_MATERIAL.Texts);
+                cmd.Parameters.AddWithValue("@UBICACION", UBICACION.Texts);
+                cmd.Parameters.AddWithValue("@MEDIDOR", MEDIDOR.Texts);
+                cmd.Parameters.AddWithValue("@MARCA", MARCA.Texts);
+                cmd.Parameters.AddWithValue("@MODELO", MODELO.Texts);
+                cmd.Parameters.AddWithValue("@NO_SERIE", NO_SERIE.Texts);
+                cmd.Parameters.AddWithValue("@ID_SEGUIMIENTO",didi);
+
+                cmd.Parameters.AddWithValue("@OBSERVACIONES", OBSERVACIONES.Texts);
+                cmd.Parameters.AddWithValue("@TEMPERATURA",TEMPERATURA.Texts);
+                cmd.Parameters.AddWithValue("@HUMEDAD_RELATIVA", HUMEDAD_RELATIVA.Texts);
+               
+                cmd.Parameters.AddWithValue("@REVISO", REVISO.Texts);
+                cmd.Parameters.AddWithValue("@REALIZO", REALIZO.Texts);  // fecha de recepción
+
+                cmd.Parameters.AddWithValue("@TIPO_CAPA", TIPO_CAPA.Texts);
+                cmd.Parameters.AddWithValue("@TIPO_ENSAYE", TIPO_ENSAYE.Texts);
+                cmd.Parameters.AddWithValue("@NO_CALIDAD", NO_CALIDAD.Texts);
+                cmd.Parameters.AddWithValue("@MVSM", MVSM.Texts);
+
+
+                try
+                {
+                    CONEXION_REMOTO_PND.USR.Open();
+                    cmd.ExecuteNonQuery();
+
+                    MENSAJE_GENERAL MN = new MENSAJE_GENERAL();
+                    MN.BOTON.Text = "Actualización Realizada";
+                    MN.ShowDialog();
+                }
+                catch (Exception ex)
+                {
+                    System.Windows.MessageBox.Show(ex.Message);
+                }
+                finally
+                {
+                    CONEXION_REMOTO_PND.USR.Close();
+                }
+
+            }
 
 
 
 
 
-     
 
 
 
 
 
 
-
-
-
-
-      
+        }
         public void generar_informe()
         {
             informe_encabezado(); 
