@@ -50,9 +50,8 @@ namespace ERP_COMPLETO
 
         private void DENSIMETRO_ELECTROMAGNETICO_Load(object sender, EventArgs e)
         {
-
             consulta_densimetro();
-            CargarTecnicosActivos();
+            //CargarTecnicosActivos();
 
             label32.MouseMove += new System.Windows.Forms.MouseEventHandler(labelTelefono_MouseMove);
             label20.MouseMove += new System.Windows.Forms.MouseEventHandler(labelTelefono_MouseMove);
@@ -385,8 +384,6 @@ namespace ERP_COMPLETO
 
 
 
-
-
         private void DGV_PADRON_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
             FORMULA_1(e.RowIndex);
@@ -690,93 +687,12 @@ namespace ERP_COMPLETO
             }
         }
 
-        private void altoButton1_Click(object sender, EventArgs e)
-        {
-
-            string query = @"UPDATE densimetro_referencias
-                     SET FECHA_ENSAYE = @FECHA_ENSAYE, 
-                         CLAVE_OBRA = @CLAVE_OBRA, 
-                         NO_INFORME = @NO_INFORME, 
-                        OBRA = @OBRA, 
-                         CLIENTE = @CLIENTE, 
-                         ATENCION = @ATENCION, 
-                         FECHA_INFORME = @FECHA_INFORME, 
-                         MATERIAL = @MATERIAL, 
-                        COMPACTACION_PROYECTO = @COMPACTACION_PROYECTO, 
-                        PROCEDENCIA = @PROCEDENCIA, 
-                        HUMEDAD_OPTIMA = @HUMEDAD_OPTIMA, 
-                         USO_MATERIAL = @USO_MATERIAL, 
-                        UBICACION = @UBICACION, 
-                         MEDIDOR = @MEDIDOR, 
-                         MARCA = @MARCA, 
-                      MODELO = @MODELO, 
-                        NO_SERIE = @NO_SERIE, 
-                        OBSERVACIONES = @OBSERVACIONES, 
-                        TEMPERATURA = @TEMPERATURA, 
-                         HUMEDAD_RELATIVA = @HUMEDAD_RELATIVA, 
-                        REVISO = @REVISO, 
-                         REALIZO = @REALIZO ,
-                       TIPO_CAPA = @TIPO_CAPA, 
-                       TIPO_ENSAYE = @TIPO_ENSAYE, 
-                         NO_CALIDAD = @NO_CALIDAD,
-                        MVSM = @MVSM     
-                        
-                     WHERE ID_SEGUIMIENTO = @ID_SEGUIMIENTO;";
-
-            using (MySqlCommand cmd = new MySqlCommand(query, CONEXION_REMOTO_PND.USR))
-            {
-                // Asignación de parámetros
-                cmd.Parameters.AddWithValue("@FECHA_ENSAYE", FECHA_ENSAYE.Text);
-                cmd.Parameters.AddWithValue("@CLAVE_OBRA", CLAVE_OBRA.Texts);
-                cmd.Parameters.AddWithValue("@NO_INFORME", NO_INFORME.Texts);
-                cmd.Parameters.AddWithValue("@OBRA", OBRA.Texts);
-                cmd.Parameters.AddWithValue("@CLIENTE", CLIENTE.Texts);
-                cmd.Parameters.AddWithValue("@ATENCION", ATENCION.Texts);
-                cmd.Parameters.AddWithValue("@FECHA_INFORME", FECHA_INFORME.Text);
-                cmd.Parameters.AddWithValue("@MATERIAL", MATERIAL.Texts);  // fecha de colado
-                cmd.Parameters.AddWithValue("@COMPACTACION_PROYECTO", COMPACTACION_PROYECTO.Texts);
-                cmd.Parameters.AddWithValue("@PROCEDENCIA", PROCEDENCIA.Texts);
-                cmd.Parameters.AddWithValue("@HUMEDAD_OPTIMA", HUMEDAD_OPTIMA.Texts);
-                cmd.Parameters.AddWithValue("@USO_MATERIAL", USO_MATERIAL.Texts);
-                cmd.Parameters.AddWithValue("@UBICACION", UBICACION.Texts);
-                cmd.Parameters.AddWithValue("@MEDIDOR", MEDIDOR.Texts);
-                cmd.Parameters.AddWithValue("@MARCA", MARCA.Texts);
-                cmd.Parameters.AddWithValue("@MODELO", MODELO.Texts);
-                cmd.Parameters.AddWithValue("@NO_SERIE", NO_SERIE.Texts);
-                cmd.Parameters.AddWithValue("@ID_SEGUIMIENTO",didi);
-
-                cmd.Parameters.AddWithValue("@OBSERVACIONES", OBSERVACIONES.Texts);
-                cmd.Parameters.AddWithValue("@TEMPERATURA",TEMPERATURA.Texts);
-                cmd.Parameters.AddWithValue("@HUMEDAD_RELATIVA", HUMEDAD_RELATIVA.Texts);
-               
-                cmd.Parameters.AddWithValue("@REVISO", REVISO.Texts);
-                cmd.Parameters.AddWithValue("@REALIZO", REALIZO.Texts);  // fecha de recepción
-
-                cmd.Parameters.AddWithValue("@TIPO_CAPA", TIPO_CAPA.Texts);
-                cmd.Parameters.AddWithValue("@TIPO_ENSAYE", TIPO_ENSAYE.Texts);
-                cmd.Parameters.AddWithValue("@NO_CALIDAD", NO_CALIDAD.Texts);
-                cmd.Parameters.AddWithValue("@MVSM", MVSM.Texts);
 
 
-                try
-                {
-                    CONEXION_REMOTO_PND.USR.Open();
-                    cmd.ExecuteNonQuery();
 
-                    MENSAJE_GENERAL MN = new MENSAJE_GENERAL();
-                    MN.BOTON.Text = "Actualización Realizada";
-                    MN.ShowDialog();
-                }
-                catch (Exception ex)
-                {
-                    System.Windows.MessageBox.Show(ex.Message);
-                }
-                finally
-                {
-                    CONEXION_REMOTO_PND.USR.Close();
-                }
 
-            }
+
+     
 
 
 
@@ -787,8 +703,7 @@ namespace ERP_COMPLETO
 
 
 
-
-        }
+      
         public void generar_informe()
         {
             informe_encabezado(); 
@@ -1234,8 +1149,15 @@ namespace ERP_COMPLETO
                     iTextSharp.text.Font letra_negra_regular_7 = FontFactory.GetFont("Arial", 7f, 0, negro);
 
 
+                    //iTextSharp.text.Image encabezado = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.ENCABEZADO_HORIZONTAL_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
+                    //iTextSharp.text.Image pie_pag = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
+
                     iTextSharp.text.Image encabezado = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.ENCABEZADO_HORIZONTAL_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    iTextSharp.text.Image pie_pag = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
+
+                    
+
+
+                   
 
                     PdfContentByte cb2 = writer.DirectContent;
                     encabezado = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.ENCABEZADO_HORIZONTAL_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -1410,20 +1332,18 @@ namespace ERP_COMPLETO
                         try
                         {
                             Image firmaImg = Image.GetInstance(firmaBytes2);
-                            if (nombre == "RICARDO DAVID GÓNZALEZ OLALDE")
-                                firmaImg.ScaleToFit(50f, 30f);
-                            else if (nombre == "TERESA JIMÉNEZ MEDINA")
-                                firmaImg.ScaleToFit(50f, 30f);
-                            else if (nombre == "ARMANDO ABOITES CHÁVEZ")
-                                firmaImg.ScaleToFit(50f, 25f);
-                            else if (nombre == "CRISTIAN GONZÁLEZ BARRERA")
-                                firmaImg.ScaleToFit(95f, 75f);
-                            else if (nombre == "EDGAR GUILLERMO CRUZ MURILLO")
-                                firmaImg.ScaleToFit(75f, 60f);
-                            else if (nombre == "DAVID OMAR JIMÉNEZ CARRADA")
-                                firmaImg.ScaleToFit(90f, 76f);
-                            else if (nombre == "DERIAN URIEL RIVERA SEVERINO")
-                                firmaImg.ScaleToFit(100f, 80f);
+                            if (nombre == "ALEXANDER GÓMEZ OVANDO")
+                               firmaImg.ScaleToFit(107f, 35);
+                            else if (nombre == "ALFREDO GÓMEZ CITALAN")
+                                firmaImg.ScaleToFit(110f, 45f);
+                            else if (nombre == "ANIVAR VAZQUEZ LOPEZ")
+                                firmaImg.ScaleToFit(100f, 36f);
+                            else if (nombre == "DIEGO ARMANDO ZUÑIGA ROMERO")
+                                firmaImg.ScaleToFit(100f, 37f);
+                                else if (nombre == "GRECIA ALEJANDRA ARGUELLO VILLANUEVA")
+                                    firmaImg.ScaleToFit(125f, 50f);
+                                else if (nombre == "MELQUI GIRON ANTONIO")
+                                firmaImg.ScaleToFit(100f, 32f);                          
                             else
                                 firmaImg.ScaleToFit(80f, 40f);
                             cell2.CellEvent = new FirmaConNombreEvent(firmaImg, nombre);
@@ -1471,10 +1391,12 @@ namespace ERP_COMPLETO
                         try
                         {
                             Image firmaImg_co = Image.GetInstance(firmaBytes); 
-                            if (nombre_co == "JAZMÍN BETANZOS SÁNCHEZ")
+                            if (nombre_co == "BELEN NOEMI SANDOVAL VELAZQUEZ")
                                 firmaImg_co.ScaleToFit(95f, 30f);
-                            else if (nombre_co == "NICANOR RAMÍREZ RAMÍREZ")
-                                firmaImg_co.ScaleToFit(100f, 35f);
+                                else if (nombre_co == "JAZMÍN BETANZOS SÁNCHEZ")
+                                    firmaImg_co.ScaleToFit(100f, 32f);
+                                else if (nombre_co == "NICANOR RAMÍREZ RAMÍREZ")
+                                firmaImg_co.ScaleToFit(100f, 36f);
                             else if (nombre_co == "CECILIA SÁNCHEZ ALANIS")
                                 firmaImg_co.ScaleToFit(100f, 37f);
                             else if (nombre_co == "ALAN SOLÍS PÉREZ")
@@ -1557,9 +1479,62 @@ namespace ERP_COMPLETO
                 catch { }
 
 
+                    iTextSharp.text.Image pie_pag;
+                    if (SESION.CONF_SUC == "C.T. CENTRAL")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. TEPÓTZOTLÁN")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.Pie_tepoz_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. SAN LUIS POTOSI")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.pie_snl_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. LERMA")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.pie_lerma_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. MÉRIDA")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.Pie_merida_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. TAPACHULA")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.pie_tapa_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. MONTERREY")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+
                     pie_pag.ScaleAbsolute(560f, 73f);
                     pie_pag.SetAbsolutePosition(25, 2);
                     cb2.AddImage(pie_pag);
+
+
+
 
                     sinencabeza_rt = false;
                 }
@@ -1744,20 +1719,18 @@ namespace ERP_COMPLETO
                             try
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                if (nombre == "RICARDO DAVID GÓNZALEZ OLALDE")
-                                    firmaImg.ScaleToFit(50f, 30f);
-                                else if (nombre == "TERESA JIMÉNEZ MEDINA")
-                                    firmaImg.ScaleToFit(50f, 30f);
-                                else if (nombre == "ARMANDO ABOITES CHÁVEZ")
-                                    firmaImg.ScaleToFit(50f, 25f);
-                                else if (nombre == "CRISTIAN GONZÁLEZ BARRERA")
-                                    firmaImg.ScaleToFit(95f, 75f);
-                                else if (nombre == "EDGAR GUILLERMO CRUZ MURILLO")
-                                    firmaImg.ScaleToFit(75f, 60f);
-                                else if (nombre == "DAVID OMAR JIMÉNEZ CARRADA")
-                                    firmaImg.ScaleToFit(90f, 76f);
-                                else if (nombre == "DERIAN URIEL RIVERA SEVERINO")
-                                    firmaImg.ScaleToFit(100f, 80f);
+                                if (nombre == "ALEXANDER GÓMEZ OVANDO")
+                                    firmaImg.ScaleToFit(107f, 35);
+                                else if (nombre == "ALFREDO GÓMEZ CITALAN")
+                                    firmaImg.ScaleToFit(110f, 45f);
+                                else if (nombre == "ANIVAR VAZQUEZ LOPEZ")
+                                    firmaImg.ScaleToFit(100f, 36f);
+                                else if (nombre == "DIEGO ARMANDO ZUÑIGA ROMERO")
+                                    firmaImg.ScaleToFit(100f, 37f);
+                                else if (nombre == "GRECIA ALEJANDRA ARGUELLO VILLANUEVA")
+                                    firmaImg.ScaleToFit(125f, 50f);
+                                else if (nombre == "MELQUI GIRON ANTONIO")
+                                    firmaImg.ScaleToFit(100f, 32f);
                                 else
                                     firmaImg.ScaleToFit(80f, 40f);
                                 cell2.CellEvent = new FirmaConNombreEvent(firmaImg, nombre);
@@ -1805,10 +1778,12 @@ namespace ERP_COMPLETO
                             try
                             {
                                 Image firmaImg_co = Image.GetInstance(firmaBytes);
-                                if (nombre_co == "JAZMÍN BETANZOS SÁNCHEZ")
+                                if (nombre_co == "BELEN NOEMI SANDOVAL VELAZQUEZ")
                                     firmaImg_co.ScaleToFit(95f, 30f);
+                                else if (nombre_co == "JAZMÍN BETANZOS SÁNCHEZ")
+                                    firmaImg_co.ScaleToFit(100f, 32f);
                                 else if (nombre_co == "NICANOR RAMÍREZ RAMÍREZ")
-                                    firmaImg_co.ScaleToFit(100f, 35f);
+                                    firmaImg_co.ScaleToFit(100f, 36f);
                                 else if (nombre_co == "CECILIA SÁNCHEZ ALANIS")
                                     firmaImg_co.ScaleToFit(100f, 37f);
                                 else if (nombre_co == "ALAN SOLÍS PÉREZ")
@@ -2587,6 +2562,8 @@ namespace ERP_COMPLETO
             int totalFilasS = DGV_PADRON.Rows.Count;
 
 
+
+            // ==== NOTA IMPORTANTE: ====   -> CUANDO SE CREA PRIMERO EL LAB, Y DESPUES EL RT, LAS COLUMNAS NO COINCIDEN PORQUE, AL SELECCIONAR "LAB" SE ACTUALIZA LA TABLA DGV, PRIMERO SERIA CREAR RT Y DESPUES LAB
             // ───────────── TABLA DGV SONDEOS ─────────────
             for (int inicio = 0; inicio < maxFilas; inicio += filasPorBloque)
             {
@@ -3363,32 +3340,40 @@ namespace ERP_COMPLETO
                     {
                         int actualFila = inicio + filaIdx;
                         string[] valores = new string[7];
-                        if (actualFila < totalFilasS && !DGV_PADRON.Rows[actualFila].IsNewRow)
+                        if (actualFila >= 0 && actualFila < DGV_PADRON.Rows.Count)
                         {
-                            valores[0] = DGV_PADRON.Rows[actualFila].Cells[5].Value?.ToString().ToUpper() ?? "";// numero tara
-                            valores[1] = DGV_PADRON.Rows[actualFila].Cells[6].Value?.ToString() ?? "";  //masa tara
-                            //valores[2] = DGV_PADRON.Rows[actualFila].Cells[7].Value?.ToString() ?? "";
+                            var row = DGV_PADRON.Rows[actualFila];
 
-                            valores[2] = DGV_PADRON.Rows[actualFila].Cells[7].Value != null && decimal.TryParse(DGV_PADRON.Rows[actualFila].Cells[7].Value.ToString(),
-                            NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num1)
-                            ? num1.ToString("F2", CultureInfo.InvariantCulture) : ""; // si es (1050) -> lo deja en 1050.00. si es (1050.1) -> lo deja en 1050.10
+                            if (!row.IsNewRow && row.Cells.Count > 11)
+                            {
+                                valores[0] = row.Cells[5].Value?.ToString().ToUpper() ?? "";
+                                valores[1] = row.Cells[6].Value?.ToString() ?? "";
 
+                                valores[2] = row.Cells[7].Value != null &&
+                                             decimal.TryParse(row.Cells[7].Value.ToString(),
+                                             NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num1)
+                                             ? num1.ToString("F2", CultureInfo.InvariantCulture) : "";
 
-                            valores[3] = DGV_PADRON.Rows[actualFila].Cells[8].Value != null && decimal.TryParse(DGV_PADRON.Rows[actualFila].Cells[8].Value.ToString(), out decimal num2)
-                            ? Math.Round(num2, 0, MidpointRounding.AwayFromZero).ToString("0") : "";  //si es (678.5-678.6) -> sube a 679. si es 678.4 -> baja a 678  CON CERO DECIMALES
+                                valores[3] = row.Cells[8].Value != null &&
+                                             decimal.TryParse(row.Cells[8].Value.ToString(), out decimal num2)
+                                             ? Math.Round(num2, 0, MidpointRounding.AwayFromZero).ToString("0") : "";
 
+                                valores[4] = row.Cells[9].Value != null &&
+                                             decimal.TryParse(row.Cells[9].Value.ToString(),
+                                             NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num11)
+                                             ? Math.Round(num11, 0, MidpointRounding.AwayFromZero)
+                                             .ToString("0", CultureInfo.InvariantCulture) : "";
 
-                            valores[4] = DGV_PADRON.Rows[actualFila].Cells[9].Value != null && decimal.TryParse(DGV_PADRON.Rows[actualFila].Cells[9].Value.ToString(),
-                            NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num11)
-                            ? Math.Round(num11, 0, MidpointRounding.AwayFromZero).ToString("0", CultureInfo.InvariantCulture) : "";
+                                valores[5] = row.Cells[10].Value != null &&
+                                             decimal.TryParse(row.Cells[10].Value.ToString(), out decimal num3)
+                                             ? Math.Round(num3, 0, MidpointRounding.AwayFromZero).ToString("0") : "";
 
-
-                            valores[5] = DGV_PADRON.Rows[actualFila].Cells[10].Value != null && decimal.TryParse(DGV_PADRON.Rows[actualFila].Cells[10].Value.ToString(), out decimal num3)
-                            ? Math.Round(num3, 0, MidpointRounding.AwayFromZero).ToString("0") : "";
-
-
-                            valores[6] = DGV_PADRON.Rows[actualFila].Cells[11].Value != null && decimal.TryParse(DGV_PADRON.Rows[actualFila].Cells[11].Value.ToString(), NumberStyles.Any,
-                            CultureInfo.InvariantCulture, out decimal num4) ? Math.Round(num4, 1, MidpointRounding.AwayFromZero).ToString("F1", CultureInfo.InvariantCulture) : "";   //contenido humedad
+                                valores[6] = row.Cells[11].Value != null &&
+                                             decimal.TryParse(row.Cells[11].Value.ToString(),
+                                             NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num4)
+                                             ? Math.Round(num4, 1, MidpointRounding.AwayFromZero)
+                                             .ToString("F1", CultureInfo.InvariantCulture) : "";
+                            }
                         }
                         else
                         {
@@ -3476,9 +3461,20 @@ namespace ERP_COMPLETO
                         {
                             string valorUnificado = "---";
 
-                            if (inicio < totalFilasS && !DGV_PADRON.Rows[inicio].IsNewRow)
+                            if (inicio >= 0 && inicio < DGV_PADRON.Rows.Count &&
+                                columnas != null && columnas.Length > 2)
                             {
-                                valorUnificado = DGV_PADRON.Rows[inicio].Cells[columnas[2]].Value?.ToString() ?? "---";
+                                int colIndex = columnas[2];
+
+                                if (colIndex >= 0 && colIndex < DGV_PADRON.Columns.Count)
+                                {
+                                    var row = DGV_PADRON.Rows[inicio];
+
+                                    if (!row.IsNewRow)
+                                    {
+                                        valorUnificado = row.Cells[colIndex].Value?.ToString() ?? "---";
+                                    }
+                                }
                             }
 
                             PdfPCell celdaUnificada = new PdfPCell(new Phrase(valorUnificado, letra_negra_bold_8));
@@ -3488,64 +3484,82 @@ namespace ERP_COMPLETO
                             celdaUnificada.BorderWidth = 0.7f;
                             celdaUnificada.HorizontalAlignment = Element.ALIGN_CENTER;
                             celdaUnificada.VerticalAlignment = Element.ALIGN_MIDDLE;
-                            tabla.AddCell(celdaUnificada);                         
+
+                            tabla.AddCell(celdaUnificada);
                         }
                         else
                         {
                             for (int filaIdx = 0; filaIdx < filasPorBloque; filaIdx++)
                             {
                                 int actualFila = inicio + filaIdx;
-
                                 string valor = "---";
 
-                                if (actualFila < totalFilasS && !DGV_PADRON.Rows[actualFila].IsNewRow)
+                                // 🔒 Validaciones completas
+                                if (actualFila >= 0 && actualFila < DGV_PADRON.Rows.Count &&
+                                    columnas != null && filaTabla >= 0 && filaTabla < columnas.Length)
                                 {
-                                    var cellValue = DGV_PADRON.Rows[actualFila].Cells[columnas[filaTabla]].Value;
+                                    int colIndex = columnas[filaTabla];
 
-                                    // FILA 0 y FILA 1 → REDONDEO A ENTERO SIN DECIMALES
-                                    if (filaTabla == 0 || filaTabla == 1)
+                                    if (colIndex >= 0 && colIndex < DGV_PADRON.Columns.Count)
                                     {
-                                        valor = cellValue != null &&
-                                        decimal.TryParse(cellValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num)
-                                        ? Math.Round(num, 0, MidpointRounding.AwayFromZero).ToString("0", CultureInfo.InvariantCulture)
-                                        : "";
-                                    }
-                                    // FILA 3 → SIN REDONDEO CON 1 DECIMAL
-                                    else if (filaTabla == 3)
-                                    {
-                                        valor = cellValue != null &&
-                                        decimal.TryParse(cellValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num)
-                                        ? Math.Round(num, 1, MidpointRounding.AwayFromZero).ToString("F1", CultureInfo.InvariantCulture)
-                                        : "";
-                                    }
-                                    // OTROS CASOS
-                                    else
-                                    {
-                                        valor = cellValue?.ToString() ?? "";
+                                        var row = DGV_PADRON.Rows[actualFila];
+
+                                        if (!row.IsNewRow)
+                                        {
+                                            var cellValue = row.Cells[colIndex].Value;
+
+                                            // FILA 0 y 1 → ENTERO
+                                            if (filaTabla == 0 || filaTabla == 1)
+                                            {
+                                                valor = cellValue != null &&
+                                                        decimal.TryParse(cellValue.ToString(),
+                                                        NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num)
+                                                        ? Math.Round(num, 0, MidpointRounding.AwayFromZero)
+                                                          .ToString("0", CultureInfo.InvariantCulture)
+                                                        : "";
+                                            }
+                                            // FILA 3 → 1 DECIMAL
+                                            else if (filaTabla == 3)
+                                            {
+                                                valor = cellValue != null &&
+                                                        decimal.TryParse(cellValue.ToString(),
+                                                        NumberStyles.Any, CultureInfo.InvariantCulture, out decimal num)
+                                                        ? Math.Round(num, 1, MidpointRounding.AwayFromZero)
+                                                          .ToString("F1", CultureInfo.InvariantCulture)
+                                                        : "";
+                                            }
+                                            // OTROS
+                                            else
+                                            {
+                                                valor = cellValue?.ToString() ?? "";
+                                            }
+                                        }
                                     }
                                 }
 
-                                PdfPCell celda = new PdfPCell(new Phrase(valor, letra_negra_regular_7));
+                                PdfPCell celda;
+
+                                if (filaTabla == 3)
+                                {
+                                    celda = new PdfPCell(new Phrase(valor, letra_negra_bold_8));
+                                }
+                                else
+                                {
+                                    celda = new PdfPCell(new Phrase(valor, letra_negra_regular_7));
+                                }
+
                                 celda.BackgroundColor = blanco;
                                 celda.BorderColor = gris_oscuro_border;
                                 celda.BorderWidth = 0.7f;
                                 celda.HorizontalAlignment = Element.ALIGN_CENTER;
                                 celda.VerticalAlignment = Element.ALIGN_MIDDLE;
-                                
 
-                                if (filaTabla == 3)
-                                {
-                                    celda = new PdfPCell(new Phrase(valor, letra_negra_bold_8));
-                                    celda.BackgroundColor = blanco;
-                                    celda.BorderColor = gris_oscuro_border;
-                                    celda.BorderWidth = 0.7f;
-                                    celda.HorizontalAlignment = Element.ALIGN_CENTER;
-                                    celda.VerticalAlignment = Element.ALIGN_MIDDLE;
-                                }
                                 tabla.AddCell(celda);
                             }
-                        }                       
+                        }
+
                     }
+
                     doc.Add(tabla);
                 }
 
@@ -3707,7 +3721,6 @@ namespace ERP_COMPLETO
 
 
                     iTextSharp.text.Image encabezado = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.ENCABEZADO_HORIZONTAL_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
-                    iTextSharp.text.Image pie_pag = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
 
                     PdfContentByte cb2 = writer.DirectContent;
                     encabezado = iTextSharp.text.Image.GetInstance(ERP_COMPLETO.Properties.Resources.ENCABEZADO_HORIZONTAL_LAB, System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -3736,10 +3749,10 @@ namespace ERP_COMPLETO
                         {
                             float firmaX, firmaY;
 
-                            if (PAN_PEE.equi.dn.REALIZO.Texts == "ALAN SOLÍS PÉREZ")
+                            if (PAN_PEE.equi.dn.REALIZO.Texts == "ALEXANDER GÓMEZ OVANDO")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 30f);
+                                firmaImg.ScaleToFit(107f, 37);
 
                                 float center = writer.PageSize.Left + 98;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
@@ -3748,138 +3761,58 @@ namespace ERP_COMPLETO
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "CRISTIAN GONZÁLEZ BARRERA")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "ALFREDO GÓMEZ CITALAN")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 80f);
+                                firmaImg.ScaleToFit(110f, 48f);
 
-                                float center = writer.PageSize.Left + 85;
+                                float center = writer.PageSize.Left + 89;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 10);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin +2);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DAVID OMAR JIMÉNEZ CARRADA")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "ANIVAR VAZQUEZ LOPEZ")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(135f, 90f);
-
-                                float center = writer.PageSize.Left + 99;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 15);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DERIAN URIEL RIVERA SEVERINO")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(140f, 100f);
+                                firmaImg.ScaleToFit(100f, 38f);
 
                                 float center = writer.PageSize.Left + 97;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 23);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DIANA NAYELI BALDERAS REYES")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(100f, 67f);
-
-                                float center = writer.PageSize.Left + 100;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 15);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "JONATHAN YOVANI GONZÁLEZ GÓMEZ")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(100f, 90f);
-
-                                float center = writer.PageSize.Left + 95;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 15);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "JOSÉ ANTONIO GÁLVEZ DOMÍNGUEZ")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 90f);
-
-                                float center = writer.PageSize.Left + 95;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "MAURICIO ESPINOZA NIETO")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(95f, 80f);
-
-                                float center = writer.PageSize.Left + 98;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 17);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "CECILIA SÁNCHEZ ALANIS")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(70f, 38f);
-
-                                float center = writer.PageSize.Left + 98;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
                                 firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 9);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "EDGAR GUILLERMO CRUZ MURILLO")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DIEGO ARMANDO ZUÑIGA ROMERO")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(80f, 43f);
+                                firmaImg.ScaleToFit(100f, 43f);
 
-                                float center = writer.PageSize.Left + 100;
+                                float center = writer.PageSize.Left + 91;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 2);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "RICARDO DAVID GÓNZALEZ OLALDE")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "MELQUI GIRON ANTONIO")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(80f, 40f);
+                                firmaImg.ScaleToFit(100f, 35f);
 
-                                float center = writer.PageSize.Left + 95;
+                                float center = writer.PageSize.Left + 94;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 9);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 10);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "TERESA JIMÉNEZ MEDINA")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(70f, 30f);
 
-                                float center = writer.PageSize.Left + 100;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 12);
 
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
+
+
                             else
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
@@ -4085,6 +4018,55 @@ namespace ERP_COMPLETO
 
 
 
+                    iTextSharp.text.Image pie_pag;
+                    if (SESION.CONF_SUC == "C.T. CENTRAL")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. TEPÓTZOTLÁN")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.Pie_tepoz_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. SAN LUIS POTOSI")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.pie_snl_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. LERMA")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.pie_lerma_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. MÉRIDA")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.Pie_merida_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. TAPACHULA")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.pie_tapa_erp,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else if (SESION.CONF_SUC == "C.T. MONTERREY")
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
+                    else
+                    {
+                        pie_pag = iTextSharp.text.Image.GetInstance(
+                            ERP_COMPLETO.Properties.Resources.PIE_DE_PÁGINA_V_LAB,
+                            System.Drawing.Imaging.ImageFormat.Jpeg);
+                    }
 
                     pie_pag.ScaleAbsolute(560f, 73f);
                     pie_pag.SetAbsolutePosition(25, 2);
@@ -4129,10 +4111,10 @@ namespace ERP_COMPLETO
                         {
                             float firmaX, firmaY;
 
-                            if (PAN_PEE.equi.dn.REALIZO.Texts == "ALAN SOLÍS PÉREZ")
+                            if (PAN_PEE.equi.dn.REALIZO.Texts == "ALEXANDER GÓMEZ OVANDO")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 30f);
+                                firmaImg.ScaleToFit(107f, 37);
 
                                 float center = writer.PageSize.Left + 98;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
@@ -4141,138 +4123,58 @@ namespace ERP_COMPLETO
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "CRISTIAN GONZÁLEZ BARRERA")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "ALFREDO GÓMEZ CITALAN")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 80f);
+                                firmaImg.ScaleToFit(110f, 48f);
 
-                                float center = writer.PageSize.Left + 85;
+                                float center = writer.PageSize.Left + 89;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 10);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 2);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DAVID OMAR JIMÉNEZ CARRADA")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "ANIVAR VAZQUEZ LOPEZ")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(135f, 90f);
-
-                                float center = writer.PageSize.Left + 99;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 15);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DERIAN URIEL RIVERA SEVERINO")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(140f, 100f);
+                                firmaImg.ScaleToFit(100f, 38f);
 
                                 float center = writer.PageSize.Left + 97;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin - 23);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DIANA NAYELI BALDERAS REYES")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(100f, 67f);
-
-                                float center = writer.PageSize.Left + 100;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 15);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "JONATHAN YOVANI GONZÁLEZ GÓMEZ")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(100f, 90f);
-
-                                float center = writer.PageSize.Left + 95;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 15);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "JOSÉ ANTONIO GÁLVEZ DOMÍNGUEZ")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(110f, 90f);
-
-                                float center = writer.PageSize.Left + 95;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "MAURICIO ESPINOZA NIETO")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(95f, 80f);
-
-                                float center = writer.PageSize.Left + 98;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 17);
-
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "CECILIA SÁNCHEZ ALANIS")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(70f, 38f);
-
-                                float center = writer.PageSize.Left + 98;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
                                 firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 9);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "EDGAR GUILLERMO CRUZ MURILLO")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "DIEGO ARMANDO ZUÑIGA ROMERO")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(80f, 43f);
+                                firmaImg.ScaleToFit(100f, 43f);
 
-                                float center = writer.PageSize.Left + 100;
+                                float center = writer.PageSize.Left + 91;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 7);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 2);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "RICARDO DAVID GÓNZALEZ OLALDE")
+                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "MELQUI GIRON ANTONIO")
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(80f, 40f);
+                                firmaImg.ScaleToFit(100f, 35f);
 
-                                float center = writer.PageSize.Left + 95;
+                                float center = writer.PageSize.Left + 94;
                                 firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 9);
+                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 10);
 
                                 firmaImg.SetAbsolutePosition(firmaX, firmaY);
                                 cb.AddImage(firmaImg);
                             }
-                            else if (PAN_PEE.equi.dn.REALIZO.Texts == "TERESA JIMÉNEZ MEDINA")
-                            {
-                                Image firmaImg = Image.GetInstance(firmaBytes2);
-                                firmaImg.ScaleToFit(70f, 30f);
 
-                                float center = writer.PageSize.Left + 100;
-                                firmaX = center - (firmaImg.ScaledWidth / 2);
-                                firmaY = writer.PageSize.GetBottom(doc.BottomMargin + 12);
 
-                                firmaImg.SetAbsolutePosition(firmaX, firmaY);
-                                cb.AddImage(firmaImg);
-                            }
+
+
                             else
                             {
                                 Image firmaImg = Image.GetInstance(firmaBytes2);
@@ -4983,8 +4885,15 @@ namespace ERP_COMPLETO
 
                 PdfPCell cell2 = new PdfPCell(new Phrase("PROCEDENCIA:", letra_negra_bold_7));
                 cell2.BackgroundColor = azul_claro;
-                cell2.BorderColor = azul_oscuro;
-                cell2.BorderWidth = 0.7f;
+                cell2.Border = 0;
+                cell2.BorderColorTop = azul_oscuro;
+                cell2.BorderWidthTop = 0.5f;
+                cell2.BorderColorBottom = azul_oscuro;
+                cell2.BorderWidthBottom = 0.7f;
+                cell2.BorderColorLeft = azul_oscuro;
+                cell2.BorderWidthLeft = 0.7f;
+                cell2.BorderColorRight = azul_oscuro;
+                cell2.BorderWidthRight = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_LEFT;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
@@ -4996,8 +4905,11 @@ namespace ERP_COMPLETO
 
                 cell2 = new PdfPCell(new Phrase(PROCEDENCIA.Texts, letra_negra_regular_7));
                 cell2.BackgroundColor = blanco;
-                cell2.BorderColor = azul_oscuro;
-                cell2.BorderWidth = 0.7f;
+                cell2.Border = 0;
+                cell2.BorderColorTop = azul_oscuro;
+                cell2.BorderWidthTop = 0.5f;
+                cell2.BorderColorBottom = azul_oscuro;
+                cell2.BorderWidthBottom = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
@@ -5008,8 +4920,15 @@ namespace ERP_COMPLETO
 
                 cell2 = new PdfPCell(new Phrase("HUMEDAD OPTIMA, %:", letra_negra_bold_7));
                 cell2.BackgroundColor = azul_claro;
-                cell2.BorderColor = azul_oscuro;
-                cell2.BorderWidth = 0.7f;
+                cell2.Border = 0;
+                cell2.BorderColorLeft = azul_oscuro;
+                cell2.BorderWidthLeft = 0.7f;
+                cell2.BorderColorTop = azul_oscuro;
+                cell2.BorderWidthTop = 0.5f;
+                cell2.BorderColorBottom = azul_oscuro;
+                cell2.BorderWidthBottom = 0.7f;
+                cell2.BorderColorRight = azul_oscuro;
+                cell2.BorderWidthRight = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
@@ -5020,8 +4939,68 @@ namespace ERP_COMPLETO
 
                 cell2 = new PdfPCell(new Phrase(HUMEDAD_OPTIMA.Texts, letra_negra_bold_7));
                 cell2.BackgroundColor = blanco;
-                cell2.BorderColor = azul_oscuro;
-                cell2.BorderWidth = 0.7f;
+                cell2.Border = 0;
+                cell2.BorderColorTop = azul_oscuro;
+                cell2.BorderWidthTop = 0.5f;
+                cell2.BorderColorBottom = azul_oscuro;
+                cell2.BorderWidthBottom = 0.7f;
+                cell2.BorderColorRight = azul_oscuro;
+                cell2.BorderWidthRight = 0.7f;
+                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                cell2.PaddingTop = 1f;
+                cell2.PaddingBottom = 4f;
+                cell2.PaddingLeft = 1f;
+                cell2.Colspan = 4;
+                table2.AddCell(cell2);
+
+                doc.Add(table2);
+            }
+            catch { }
+            // NO. CALIDAD:
+            try
+            {
+                PdfPTable table2 = new PdfPTable(25);
+                table2.TotalWidth = 560;
+                table2.LockedWidth = true;
+                table2.SpacingBefore = 0;
+                table2.SpacingAfter = 0;
+
+                PdfPCell cell2 = new PdfPCell(new Phrase(" ", letra_negra_bold_7));
+                cell2.BackgroundColor = blanco;
+                cell2.Border = 0;
+                cell2.HorizontalAlignment = Element.ALIGN_LEFT;
+                cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                cell2.PaddingTop = 1f;
+                cell2.PaddingBottom = 4f;
+                cell2.PaddingLeft = 3f;
+                cell2.Colspan = 17;
+                table2.AddCell(cell2);
+
+                cell2 = new PdfPCell(new Phrase("No. DE CALIDAD:", letra_negra_bold_7));
+                cell2.BackgroundColor = azul_claro;
+                cell2.Border = 0;
+                cell2.BorderColorBottom = azul_oscuro;
+                cell2.BorderWidthBottom = 0.7f;
+                cell2.BorderColorLeft = azul_oscuro;
+                cell2.BorderWidthLeft = 0.7f;
+                cell2.BorderColorRight = azul_oscuro;
+                cell2.BorderWidthRight = 0.7f;
+                cell2.HorizontalAlignment = Element.ALIGN_CENTER;
+                cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
+                cell2.PaddingTop = 1f;
+                cell2.PaddingBottom = 4f;
+                cell2.PaddingLeft = 1f;
+                cell2.Colspan = 4;
+                table2.AddCell(cell2);
+
+                cell2 = new PdfPCell(new Phrase(NO_CALIDAD.Texts, letra_negra_bold_7));
+                cell2.BackgroundColor = blanco;
+                cell2.Border = 0;
+                cell2.BorderColorBottom = azul_oscuro;
+                cell2.BorderWidthBottom = 0.7f;
+                cell2.BorderColorRight = azul_oscuro;
+                cell2.BorderWidthRight = 0.7f;
                 cell2.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell2.VerticalAlignment = Element.ALIGN_MIDDLE;
                 cell2.PaddingTop = 1f;
@@ -5956,7 +5935,7 @@ namespace ERP_COMPLETO
                     cell1.PaddingTop = 1f;
                     cell1.PaddingBottom = 3f;
                     cell1.Colspan = 2;
-                    cell1.FixedHeight = (paginaActual == 1) ? 27f : 27f;
+                    cell1.FixedHeight = (paginaActual == 1) ? 26f : 26f;
                     cell1.HorizontalAlignment = Element.ALIGN_CENTER;
                     cell1.VerticalAlignment = Element.ALIGN_MIDDLE;
                     table.AddCell(cell1);
@@ -6090,7 +6069,7 @@ namespace ERP_COMPLETO
             leyendaCell.PaddingBottom = 3f;
             leyendaCell.HorizontalAlignment = Element.ALIGN_CENTER;
             leyendaCell.VerticalAlignment = Element.ALIGN_MIDDLE;
-            leyendaCell.FixedHeight = (paginaActual == 1) ? 27f : 27f;
+            leyendaCell.FixedHeight = (paginaActual == 1) ? 26f : 26f;
             leyendaCell.Colspan = 14;
             tablaLeyenda.AddCell(leyendaCell);
             doc.Add(tablaLeyenda);
@@ -6114,7 +6093,7 @@ namespace ERP_COMPLETO
                 cell_r.PaddingTop = 1f;
                 cell_r.PaddingBottom = 3f;
                 cell_r.Colspan = 2;
-                cell_r.FixedHeight = (paginaActual == 1) ? 27f : 27f;
+                cell_r.FixedHeight = (paginaActual == 1) ? 26f : 26f;
                 cell_r.HorizontalAlignment = Element.ALIGN_CENTER;
                 cell_r.VerticalAlignment = Element.ALIGN_MIDDLE;
                 table_r.AddCell(cell_r);
